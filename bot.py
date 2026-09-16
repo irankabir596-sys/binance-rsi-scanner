@@ -17,11 +17,6 @@ RSI_PERIOD = 14
 
 VOLUME_LOOKBACK = 20
 
-# حجم:
-# کمتر از 0.75 برابر میانگین = کم
-# 0.75 تا 1.5 برابر = متوسط
-# بیشتر از 1.5 برابر = زیاد
-
 LOW_VOLUME_RATIO = 0.75
 HIGH_VOLUME_RATIO = 1.50
 
@@ -33,9 +28,18 @@ TIMEFRAMES = {
     "1D": "1d",
 }
 
+TIMEFRAME_ORDER = {
+    "5m": 0,
+    "15m": 1,
+    "1h": 2,
+    "4h": 3,
+    "1D": 4,
+}
+
 TELEGRAM_LIMIT = 3500
 
 USERS_FILE = "users.json"
+STATE_FILE = "state.json"
 
 
 # =====================================================
@@ -45,57 +49,48 @@ USERS_FILE = "users.json"
 session = requests.Session()
 
 session.headers.update({
-    "User-Agent": "Binance-RSI-Scanner/3.0"
+    "User-Agent": "Binance-RSI-Scanner/4.0"
 })
 
 
 # =====================================================
-# USERS DATABASE
+# JSON DATABASE
 # =====================================================
 
-def load_users():
+def load_json(
+    filename,
+    default
+):
 
-    if not os.path.exists(USERS_FILE):
-
-        return {
-            "users": {},
-            "last_update_id": 0
-        }
+    if not os.path.exists(filename):
+        return default
 
     try:
 
         with open(
-            USERS_FILE,
+            filename,
             "r",
             encoding="utf-8"
         ) as file:
 
-            data = json.load(file)
-
-        if "users" not in data:
-            data["users"] = {}
-
-        if "last_update_id" not in data:
-            data["last_update_id"] = 0
-
-        return data
+            return json.load(file)
 
     except Exception as error:
 
         print(
-            f"Could not read users.json: {error}"
+            f"Could not read {filename}: {error}"
         )
 
-        return {
-            "users": {},
-            "last_update_id": 0
-        }
+        return default
 
 
-def save_users(data):
+def save_json(
+    filename,
+    data
+):
 
     with open(
-        USERS_FILE,
+        filename,
         "w",
         encoding="utf-8"
     ) as file:
@@ -106,6 +101,41 @@ def save_users(data):
             ensure_ascii=False,
             indent=2
         )
+
+
+def load_users():
+
+    return load_json(
+        USERS_FILE,
+        {
+            "users": {},
+            "last_update_id": 0
+        }
+    )
+
+
+def save_users(database):
+
+    save_json(
+        USERS_FILE,
+        database
+    )
+
+
+def load_state():
+
+    return load_json(
+        STATE_FILE,
+        {}
+    )
+
+
+def save_state(state):
+
+    save_json(
+        STATE_FILE,
+        state
+    )
 
 
 # =====================================================
@@ -142,7 +172,7 @@ def telegram_api(
 
 
 # =====================================================
-# TELEGRAM MESSAGE
+# SEND MESSAGE
 # =====================================================
 
 def send_message(
@@ -363,16 +393,14 @@ def process_updates(database):
             send_message(
                 chat_id,
                 "🤖 ربات RSI فعال شد.\n\n"
-                "از این به بعد سیگنال‌های RSI "
-                "برای شما ارسال می‌شود.\n\n"
-                "🔴 RSI >= 70 → OVERBOUGHT\n"
-                "🟢 RSI <= 30 → OVERSOLD\n\n"
-                "📊 حجم معامله نیز نمایش داده می‌شود.\n"
-                "📈 لینک TradingView نیز ارسال می‌شود.\n\n"
+                "سیگنال فقط زمانی ارسال می‌شود "
+                "که RSI وارد محدوده شود.\n\n"
+                "🔴 ورود RSI به بالای 70\n"
+                "🟢 ورود RSI به زیر 30\n\n"
+                "📈 حجم فعلی نیز نمایش داده می‌شود.\n"
+                "📊 لینک TradingView نیز ارسال می‌شود.\n\n"
                 "برای توقف:\n"
-                "/stop\n\n"
-                "برای مشاهده وضعیت:\n"
-                "/status"
+                "/stop"
             )
 
             print(
@@ -420,7 +448,7 @@ def process_updates(database):
                 send_message(
                     chat_id,
                     "🟢 وضعیت: فعال\n\n"
-                    "سیگنال‌های RSI برای شما "
+                    "سیگنال‌های ورود RSI برای شما "
                     "ارسال می‌شود."
                 )
 
@@ -526,7 +554,7 @@ def calculate_rsi(
 
 
 # =====================================================
-# TOP 100 COINS
+# TOP 100
 # =====================================================
 
 def get_top_coins():
@@ -611,7 +639,7 @@ def get_top_coins():
 
 
 # =====================================================
-# GET CANDLES
+# CANDLE DATA
 # =====================================================
 
 def get_candle_data(
@@ -643,17 +671,19 @@ def get_candle_data(
     if not isinstance(data, list):
         return None
 
-    if len(data) < (
+    minimum = (
         RSI_PERIOD
         + VOLUME_LOOKBACK
         + 2
-    ):
+    )
+
+    if len(data) < minimum:
         return None
 
-    # آخرین کندل برای وضعیت لحظه‌ای
-    current_candle = data[-1]
+    # =============================================
+    # RSI از کندل‌های بسته شده
+    # =============================================
 
-    # کندل‌های بسته‌شده برای RSI
     closed_data = data[:-1]
 
     closes = []
@@ -681,6 +711,12 @@ def get_candle_data(
 
     if rsi is None:
         return None
+
+    # =============================================
+    # حجم کندل در حال تشکیل
+    # =============================================
+
+    current_candle = data[-1]
 
     try:
 
@@ -749,7 +785,7 @@ def get_volume_status(
 
 
 # =====================================================
-# TRADINGVIEW LINK
+# TRADINGVIEW
 # =====================================================
 
 def tradingview_link(
@@ -770,25 +806,89 @@ def tradingview_link(
         "5"
     )
 
-    tv_symbol = (
-        "BINANCE:"
-        + symbol
-    )
-
     return (
         "https://www.tradingview.com/"
-        "chart/?symbol="
-        + tv_symbol
+        "chart/?symbol=BINANCE:"
+        + symbol
         + "&interval="
         + tv_tf
     )
 
 
 # =====================================================
+# CHECK RSI ENTRY
+# =====================================================
+
+def check_rsi_entry(
+    state,
+    symbol,
+    timeframe,
+    current_rsi
+):
+
+    key = (
+        symbol
+        + "_"
+        + timeframe
+    )
+
+    previous_rsi = state.get(
+        key
+    )
+
+    # =============================================
+    # اولین بار که این نماد بررسی می‌شود
+    # فقط وضعیت را ذخیره می‌کنیم.
+    # =============================================
+
+    if previous_rsi is None:
+
+        state[key] = current_rsi
+
+        return None
+
+    signal = None
+
+    # =============================================
+    # ورود به OVERBOUGHT
+    # از زیر 70 به بالای 70
+    # =============================================
+
+    if (
+        previous_rsi < 70
+        and current_rsi >= 70
+    ):
+
+        signal = "🔴 OVERBOUGHT"
+
+    # =============================================
+    # ورود به OVERSOLD
+    # از بالای 30 به زیر 30
+    # =============================================
+
+    elif (
+        previous_rsi > 30
+        and current_rsi <= 30
+    ):
+
+        signal = "🟢 OVERSOLD"
+
+    # =============================================
+    # Update state
+    # =============================================
+
+    state[key] = current_rsi
+
+    return signal
+
+
+# =====================================================
 # SCAN MARKET
 # =====================================================
 
-def scan_market():
+def scan_market(
+    state
+):
 
     symbols = get_top_coins()
 
@@ -824,43 +924,36 @@ def scan_market():
 
                 rsi = result["rsi"]
 
-                # =================================
-                # RSI CONDITION
-                # =================================
+                signal = check_rsi_entry(
+                    state,
+                    symbol,
+                    timeframe,
+                    rsi
+                )
 
-                if rsi >= 70:
-
-                    status = "🔴 OVERBOUGHT"
-
-                elif rsi <= 30:
-
-                    status = "🟢 OVERSOLD"
-
-                else:
-
+                # فقط ورود جدید به محدوده
+                if signal is None:
                     continue
 
                 volume_ratio = (
                     result["volume_ratio"]
                 )
 
-                volume_status = (
-                    get_volume_status(
-                        volume_ratio
-                    )
-                )
-
                 signals.append({
                     "symbol": symbol,
                     "timeframe": timeframe,
                     "rsi": rsi,
-                    "status": status,
+                    "status": signal,
                     "volume_ratio": volume_ratio,
-                    "volume_status": volume_status,
-                    "tradingview": tradingview_link(
-                        symbol,
-                        timeframe
-                    )
+                    "volume_status":
+                        get_volume_status(
+                            volume_ratio
+                        ),
+                    "tradingview":
+                        tradingview_link(
+                            symbol,
+                            timeframe
+                        )
                 })
 
             except Exception as error:
@@ -876,6 +969,60 @@ def scan_market():
 
 
 # =====================================================
+# SORT SIGNALS
+# =====================================================
+
+def sort_signals(
+    signals
+):
+
+    overbought = [
+        item
+        for item in signals
+        if item["status"]
+        == "🔴 OVERBOUGHT"
+    ]
+
+    oversold = [
+        item
+        for item in signals
+        if item["status"]
+        == "🟢 OVERSOLD"
+    ]
+
+    # Overbought:
+    # RSI بالاتر اول
+    # سپس تایم‌فریم
+
+    overbought.sort(
+        key=lambda x: (
+            -x["rsi"],
+            TIMEFRAME_ORDER[
+                x["timeframe"]
+            ]
+        )
+    )
+
+    # Oversold:
+    # RSI پایین‌تر اول
+    # سپس تایم‌فریم
+
+    oversold.sort(
+        key=lambda x: (
+            x["rsi"],
+            TIMEFRAME_ORDER[
+                x["timeframe"]
+            ]
+        )
+    )
+
+    return (
+        overbought
+        + oversold
+    )
+
+
+# =====================================================
 # CREATE MESSAGE
 # =====================================================
 
@@ -883,27 +1030,27 @@ def make_message(
     signals
 ):
 
+    signals = sort_signals(
+        signals
+    )
+
     lines = [
         "🚨 BINANCE RSI SCANNER",
         "",
         f"🔎 TOP {TOP_COINS} USDT COINS",
         "📊 RSI(14)",
-        "📈 Current Candle Volume",
+        "⚡ NEW RSI ENTRY SIGNALS",
         ""
     ]
 
     if not signals:
 
         lines.append(
-            "✅ هیچ ارزی با RSI >= 70 "
-            "یا RSI <= 30 پیدا نشد."
+            "ℹ️ در این اسکن RSI جدیدی "
+            "وارد محدوده 70/30 نشد."
         )
 
         return "\n".join(lines)
-
-    # ===============================================
-    # OVERBOUGHT
-    # ===============================================
 
     overbought = [
         x
@@ -912,10 +1059,25 @@ def make_message(
         == "🔴 OVERBOUGHT"
     ]
 
+    oversold = [
+        x
+        for x in signals
+        if x["status"]
+        == "🟢 OVERSOLD"
+    ]
+
+    # =============================================
+    # OVERBOUGHT
+    # =============================================
+
     if overbought:
 
         lines.append(
-            "🔴 OVERBOUGHT — RSI >= 70"
+            "🔴 OVERBOUGHT"
+        )
+
+        lines.append(
+            "ورود RSI به بالای 70"
         )
 
         lines.append("")
@@ -927,8 +1089,7 @@ def make_message(
             )
 
             lines.append(
-                f"⏱ تایم‌فریم: "
-                f"{item['timeframe']}"
+                f"⏱ {item['timeframe']}"
             )
 
             lines.append(
@@ -937,40 +1098,39 @@ def make_message(
             )
 
             lines.append(
-                f"📈 حجم فعلی: "
+                f"📈 حجم: "
                 f"{item['volume_status']}"
             )
 
             lines.append(
-                f"📊 نسبت حجم: "
-                f"{item['volume_ratio']:.2f}x "
-                f"میانگین 20 کندل"
+                f"📊 حجم نسبت به میانگین: "
+                f"{item['volume_ratio']:.2f}x"
             )
 
             lines.append(
-                f"📈 TradingView:\n"
-                f"{item['tradingview']}"
+                "📈 TradingView:"
+            )
+
+            lines.append(
+                item["tradingview"]
             )
 
             lines.append(
                 "────────────────"
             )
 
-    # ===============================================
+    # =============================================
     # OVERSOLD
-    # ===============================================
-
-    oversold = [
-        x
-        for x in signals
-        if x["status"]
-        == "🟢 OVERSOLD"
-    ]
+    # =============================================
 
     if oversold:
 
         lines.append(
-            "🟢 OVERSOLD — RSI <= 30"
+            "🟢 OVERSOLD"
+        )
+
+        lines.append(
+            "ورود RSI به زیر 30"
         )
 
         lines.append("")
@@ -982,8 +1142,7 @@ def make_message(
             )
 
             lines.append(
-                f"⏱ تایم‌فریم: "
-                f"{item['timeframe']}"
+                f"⏱ {item['timeframe']}"
             )
 
             lines.append(
@@ -992,19 +1151,21 @@ def make_message(
             )
 
             lines.append(
-                f"📈 حجم فعلی: "
+                f"📈 حجم: "
                 f"{item['volume_status']}"
             )
 
             lines.append(
-                f"📊 نسبت حجم: "
-                f"{item['volume_ratio']:.2f}x "
-                f"میانگین 20 کندل"
+                f"📊 حجم نسبت به میانگین: "
+                f"{item['volume_ratio']:.2f}x"
             )
 
             lines.append(
-                f"📈 TradingView:\n"
-                f"{item['tradingview']}"
+                "📈 TradingView:"
+            )
+
+            lines.append(
+                item["tradingview"]
             )
 
             lines.append(
@@ -1015,7 +1176,7 @@ def make_message(
 
 
 # =====================================================
-# SEND TO ALL USERS
+# SEND TO USERS
 # =====================================================
 
 def send_to_all_users(
@@ -1083,46 +1244,82 @@ def main():
     )
 
     print(
-        "BINANCE MULTI-USER RSI BOT"
+        "BINANCE MULTI USER RSI BOT"
     )
 
     print(
-        "TOP 100 + VOLUME + TRADINGVIEW"
+        "TOP 100"
+    )
+
+    print(
+        "RSI ENTRY + VOLUME + TRADINGVIEW"
     )
 
     print(
         "======================================"
     )
 
-    # Load users
+    # ---------------------------------------------
+    # Users
+    # ---------------------------------------------
+
     database = load_users()
 
-    # دریافت /start /stop
     database = process_updates(
         database
     )
 
-    # Scan Binance
-    signals = scan_market()
+    # ---------------------------------------------
+    # RSI state
+    # ---------------------------------------------
+
+    state = load_state()
+
+    # ---------------------------------------------
+    # Scan
+    # ---------------------------------------------
+
+    signals = scan_market(
+        state
+    )
 
     print(
-        f"Signals found: "
+        f"NEW RSI ENTRY SIGNALS: "
         f"{len(signals)}"
     )
 
-    # Create message
+    # ---------------------------------------------
+    # Save RSI state
+    # ---------------------------------------------
+
+    save_state(
+        state
+    )
+
+    # ---------------------------------------------
+    # Message
+    # ---------------------------------------------
+
     message = make_message(
         signals
     )
 
-    # Send to all active users
+    # ---------------------------------------------
+    # Send
+    # ---------------------------------------------
+
     send_to_all_users(
         database,
         message
     )
 
-    # Save database
-    save_users(database)
+    # ---------------------------------------------
+    # Save users
+    # ---------------------------------------------
+
+    save_users(
+        database
+    )
 
     print(
         "======================================"
