@@ -12,8 +12,18 @@ BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 BINANCE = "https://data-api.binance.vision"
 
-TOP_COINS = 200
+TOP_COINS = 100
 RSI_PERIOD = 14
+
+VOLUME_LOOKBACK = 20
+
+# حجم:
+# کمتر از 0.75 برابر میانگین = کم
+# 0.75 تا 1.5 برابر = متوسط
+# بیشتر از 1.5 برابر = زیاد
+
+LOW_VOLUME_RATIO = 0.75
+HIGH_VOLUME_RATIO = 1.50
 
 TIMEFRAMES = {
     "5m": "5m",
@@ -35,7 +45,7 @@ USERS_FILE = "users.json"
 session = requests.Session()
 
 session.headers.update({
-    "User-Agent": "Binance-RSI-Scanner/2.0"
+    "User-Agent": "Binance-RSI-Scanner/3.0"
 })
 
 
@@ -46,6 +56,7 @@ session.headers.update({
 def load_users():
 
     if not os.path.exists(USERS_FILE):
+
         return {
             "users": {},
             "last_update_id": 0
@@ -69,9 +80,11 @@ def load_users():
 
         return data
 
-    except Exception:
+    except Exception as error:
 
-        print("users.json is invalid. Creating new database.")
+        print(
+            f"Could not read users.json: {error}"
+        )
 
         return {
             "users": {},
@@ -99,7 +112,10 @@ def save_users(data):
 # TELEGRAM API
 # =====================================================
 
-def telegram_api(method, data=None):
+def telegram_api(
+    method,
+    data=None
+):
 
     url = (
         f"https://api.telegram.org/"
@@ -117,6 +133,7 @@ def telegram_api(method, data=None):
     result = response.json()
 
     if not result.get("ok"):
+
         raise RuntimeError(
             f"Telegram API error: {result}"
         )
@@ -125,214 +142,7 @@ def telegram_api(method, data=None):
 
 
 # =====================================================
-# DISABLE WEBHOOK
-# =====================================================
-
-def prepare_telegram():
-
-    try:
-
-        telegram_api(
-            "deleteWebhook",
-            {
-                "drop_pending_updates": False
-            }
-        )
-
-        print("Telegram webhook: disabled")
-
-    except Exception as error:
-
-        print(
-            f"Webhook preparation warning: {error}"
-        )
-
-
-# =====================================================
-# RECEIVE TELEGRAM UPDATES
-# =====================================================
-
-def process_updates(database):
-
-    offset = (
-        database.get(
-            "last_update_id",
-            0
-        )
-        + 1
-    )
-
-    try:
-
-        result = telegram_api(
-            "getUpdates",
-            {
-                "offset": offset,
-                "limit": 100,
-                "timeout": 1,
-                "allowed_updates": json.dumps(
-                    ["message"]
-                )
-            }
-        )
-
-    except Exception as error:
-
-        print(
-            f"Telegram update error: {error}"
-        )
-
-        return database
-
-    updates = result.get(
-        "result",
-        []
-    )
-
-    print(
-        f"Telegram updates received: {len(updates)}"
-    )
-
-    for update in updates:
-
-        update_id = update.get(
-            "update_id"
-        )
-
-        if update_id is not None:
-
-            database["last_update_id"] = max(
-                database.get(
-                    "last_update_id",
-                    0
-                ),
-                update_id
-            )
-
-        message = update.get(
-            "message"
-        )
-
-        if not message:
-            continue
-
-        chat = message.get(
-            "chat"
-        )
-
-        if not chat:
-            continue
-
-        chat_id = str(
-            chat.get("id")
-        )
-
-        text = (
-            message.get(
-                "text",
-                ""
-            )
-            .strip()
-            .lower()
-        )
-
-        if not chat_id:
-            continue
-
-        # =========================================
-        # /start
-        # =========================================
-
-        if text.startswith("/start"):
-
-            database["users"][chat_id] = {
-                "active": True,
-                "username": chat.get(
-                    "username",
-                    ""
-                ),
-                "first_name": chat.get(
-                    "first_name",
-                    ""
-                )
-            }
-
-            send_message(
-                chat_id,
-                "🤖 ربات RSI فعال شد.\n\n"
-                "از این به بعد سیگنال‌های RSI "
-                "برای شما ارسال می‌شود.\n\n"
-                "🔴 RSI >= 70 → OVERBOUGHT\n"
-                "🟢 RSI <= 30 → OVERSOLD\n\n"
-                "برای توقف دریافت پیام:\n"
-                "/stop"
-            )
-
-            print(
-                f"User STARTED: {chat_id}"
-            )
-
-        # =========================================
-        # /stop
-        # =========================================
-
-        elif text.startswith("/stop"):
-
-            if chat_id in database["users"]:
-
-                database["users"][
-                    chat_id
-                ]["active"] = False
-
-            send_message(
-                chat_id,
-                "⛔ دریافت سیگنال‌ها متوقف شد.\n\n"
-                "برای فعال‌سازی دوباره:\n"
-                "/start"
-            )
-
-            print(
-                f"User STOPPED: {chat_id}"
-            )
-
-        # =========================================
-        # /status
-        # =========================================
-
-        elif text.startswith("/status"):
-
-            user = database["users"].get(
-                chat_id
-            )
-
-            if user and user.get(
-                "active",
-                False
-            ):
-
-                send_message(
-                    chat_id,
-                    "🟢 وضعیت: فعال\n\n"
-                    "سیگنال‌های RSI برای شما "
-                    "ارسال می‌شود."
-                )
-
-            else:
-
-                send_message(
-                    chat_id,
-                    "🔴 وضعیت: غیرفعال\n\n"
-                    "برای فعال‌سازی:\n"
-                    "/start"
-                )
-
-    save_users(database)
-
-    return database
-
-
-# =====================================================
-# SEND MESSAGE
+# TELEGRAM MESSAGE
 # =====================================================
 
 def send_message(
@@ -362,10 +172,6 @@ def send_message(
         return False
 
 
-# =====================================================
-# SEND LONG MESSAGE
-# =====================================================
-
 def send_long_message(
     chat_id,
     message
@@ -386,6 +192,7 @@ def send_long_message(
         if len(line) > TELEGRAM_LIMIT:
 
             if current:
+
                 parts.append(current)
                 current = ""
 
@@ -446,6 +253,189 @@ def send_long_message(
         time.sleep(0.3)
 
     return success
+
+
+# =====================================================
+# TELEGRAM USERS
+# =====================================================
+
+def process_updates(database):
+
+    offset = (
+        database.get(
+            "last_update_id",
+            0
+        )
+        + 1
+    )
+
+    try:
+
+        result = telegram_api(
+            "getUpdates",
+            {
+                "offset": offset,
+                "limit": 100,
+                "timeout": 1,
+                "allowed_updates": json.dumps(
+                    ["message"]
+                )
+            }
+        )
+
+    except Exception as error:
+
+        print(
+            f"Telegram update error: {error}"
+        )
+
+        return database
+
+    updates = result.get(
+        "result",
+        []
+    )
+
+    print(
+        f"Telegram updates: {len(updates)}"
+    )
+
+    for update in updates:
+
+        update_id = update.get(
+            "update_id"
+        )
+
+        if update_id is not None:
+
+            database["last_update_id"] = max(
+                database.get(
+                    "last_update_id",
+                    0
+                ),
+                update_id
+            )
+
+        message = update.get(
+            "message"
+        )
+
+        if not message:
+            continue
+
+        chat = message.get(
+            "chat"
+        )
+
+        if not chat:
+            continue
+
+        chat_id = str(
+            chat.get("id")
+        )
+
+        text = message.get(
+            "text",
+            ""
+        ).strip().lower()
+
+        if not chat_id:
+            continue
+
+        # =========================================
+        # START
+        # =========================================
+
+        if text.startswith("/start"):
+
+            database["users"][chat_id] = {
+                "active": True,
+                "username": chat.get(
+                    "username",
+                    ""
+                ),
+                "first_name": chat.get(
+                    "first_name",
+                    ""
+                )
+            }
+
+            send_message(
+                chat_id,
+                "🤖 ربات RSI فعال شد.\n\n"
+                "از این به بعد سیگنال‌های RSI "
+                "برای شما ارسال می‌شود.\n\n"
+                "🔴 RSI >= 70 → OVERBOUGHT\n"
+                "🟢 RSI <= 30 → OVERSOLD\n\n"
+                "📊 حجم معامله نیز نمایش داده می‌شود.\n"
+                "📈 لینک TradingView نیز ارسال می‌شود.\n\n"
+                "برای توقف:\n"
+                "/stop\n\n"
+                "برای مشاهده وضعیت:\n"
+                "/status"
+            )
+
+            print(
+                f"User STARTED: {chat_id}"
+            )
+
+        # =========================================
+        # STOP
+        # =========================================
+
+        elif text.startswith("/stop"):
+
+            if chat_id in database["users"]:
+
+                database["users"][
+                    chat_id
+                ]["active"] = False
+
+            send_message(
+                chat_id,
+                "⛔ دریافت سیگنال‌ها متوقف شد.\n\n"
+                "برای فعال‌سازی دوباره:\n"
+                "/start"
+            )
+
+            print(
+                f"User STOPPED: {chat_id}"
+            )
+
+        # =========================================
+        # STATUS
+        # =========================================
+
+        elif text.startswith("/status"):
+
+            user = database["users"].get(
+                chat_id
+            )
+
+            if user and user.get(
+                "active",
+                False
+            ):
+
+                send_message(
+                    chat_id,
+                    "🟢 وضعیت: فعال\n\n"
+                    "سیگنال‌های RSI برای شما "
+                    "ارسال می‌شود."
+                )
+
+            else:
+
+                send_message(
+                    chat_id,
+                    "🔴 وضعیت: غیرفعال\n\n"
+                    "برای فعال‌سازی:\n"
+                    "/start"
+                )
+
+    save_users(database)
+
+    return database
 
 
 # =====================================================
@@ -536,7 +526,7 @@ def calculate_rsi(
 
 
 # =====================================================
-# TOP 200
+# TOP 100 COINS
 # =====================================================
 
 def get_top_coins():
@@ -556,6 +546,7 @@ def get_top_coins():
     data = response.json()
 
     if not isinstance(data, list):
+
         raise RuntimeError(
             "Invalid Binance ticker response"
         )
@@ -620,10 +611,10 @@ def get_top_coins():
 
 
 # =====================================================
-# GET RSI
+# GET CANDLES
 # =====================================================
 
-def get_rsi(
+def get_candle_data(
     symbol,
     interval
 ):
@@ -652,15 +643,22 @@ def get_rsi(
     if not isinstance(data, list):
         return None
 
-    if len(data) < RSI_PERIOD + 2:
+    if len(data) < (
+        RSI_PERIOD
+        + VOLUME_LOOKBACK
+        + 2
+    ):
         return None
 
-    # آخرین کندل کامل نیست
-    data = data[:-1]
+    # آخرین کندل برای وضعیت لحظه‌ای
+    current_candle = data[-1]
+
+    # کندل‌های بسته‌شده برای RSI
+    closed_data = data[:-1]
 
     closes = []
 
-    for candle in data:
+    for candle in closed_data:
 
         try:
 
@@ -676,9 +674,113 @@ def get_rsi(
 
             continue
 
-    return calculate_rsi(
+    rsi = calculate_rsi(
         closes,
         RSI_PERIOD
+    )
+
+    if rsi is None:
+        return None
+
+    try:
+
+        current_volume = float(
+            current_candle[5]
+        )
+
+        previous_volumes = [
+            float(candle[5])
+            for candle
+            in data[
+                -VOLUME_LOOKBACK - 1:
+                -1
+            ]
+        ]
+
+    except (
+        IndexError,
+        ValueError,
+        TypeError
+    ):
+
+        return None
+
+    if not previous_volumes:
+        return None
+
+    average_volume = (
+        sum(previous_volumes)
+        / len(previous_volumes)
+    )
+
+    if average_volume <= 0:
+        return None
+
+    volume_ratio = (
+        current_volume
+        / average_volume
+    )
+
+    return {
+        "rsi": rsi,
+        "current_volume": current_volume,
+        "average_volume": average_volume,
+        "volume_ratio": volume_ratio
+    }
+
+
+# =====================================================
+# VOLUME STATUS
+# =====================================================
+
+def get_volume_status(
+    ratio
+):
+
+    if ratio < LOW_VOLUME_RATIO:
+
+        return "🟢 کم"
+
+    if ratio < HIGH_VOLUME_RATIO:
+
+        return "🟡 متوسط"
+
+    return "🔥 زیاد"
+
+
+# =====================================================
+# TRADINGVIEW LINK
+# =====================================================
+
+def tradingview_link(
+    symbol,
+    timeframe
+):
+
+    tv_timeframes = {
+        "5m": "5",
+        "15m": "15",
+        "1h": "60",
+        "4h": "240",
+        "1D": "D"
+    }
+
+    tv_tf = tv_timeframes.get(
+        timeframe,
+        "5"
+    )
+
+    tv_symbol = (
+        "BINANCE:"
+        + symbol
+    )
+
+    return (
+        "https://www.tradingview.com/"
+        "chart/?symbol="
+        + tv_symbol
+        + "&interval="
+        + tv_tf
     )
 
 
@@ -691,7 +793,7 @@ def scan_market():
     symbols = get_top_coins()
 
     print(
-        f"Scanning {len(symbols)} coins..."
+        f"Scanning TOP {len(symbols)} coins..."
     )
 
     signals = []
@@ -712,31 +814,54 @@ def scan_market():
 
             try:
 
-                rsi = get_rsi(
+                result = get_candle_data(
                     symbol,
                     interval
                 )
 
-                if rsi is None:
+                if result is None:
                     continue
+
+                rsi = result["rsi"]
+
+                # =================================
+                # RSI CONDITION
+                # =================================
 
                 if rsi >= 70:
 
-                    signals.append({
-                        "symbol": symbol,
-                        "timeframe": timeframe,
-                        "rsi": rsi,
-                        "status": "OVERBOUGHT"
-                    })
+                    status = "🔴 OVERBOUGHT"
 
                 elif rsi <= 30:
 
-                    signals.append({
-                        "symbol": symbol,
-                        "timeframe": timeframe,
-                        "rsi": rsi,
-                        "status": "OVERSOLD"
-                    })
+                    status = "🟢 OVERSOLD"
+
+                else:
+
+                    continue
+
+                volume_ratio = (
+                    result["volume_ratio"]
+                )
+
+                volume_status = (
+                    get_volume_status(
+                        volume_ratio
+                    )
+                )
+
+                signals.append({
+                    "symbol": symbol,
+                    "timeframe": timeframe,
+                    "rsi": rsi,
+                    "status": status,
+                    "volume_ratio": volume_ratio,
+                    "volume_status": volume_status,
+                    "tradingview": tradingview_link(
+                        symbol,
+                        timeframe
+                    )
+                })
 
             except Exception as error:
 
@@ -754,26 +879,37 @@ def scan_market():
 # CREATE MESSAGE
 # =====================================================
 
-def make_message(signals):
+def make_message(
+    signals
+):
 
     lines = [
         "🚨 BINANCE RSI SCANNER",
         "",
-        f"🔎 Top {TOP_COINS} USDT coins",
+        f"🔎 TOP {TOP_COINS} USDT COINS",
         "📊 RSI(14)",
+        "📈 Current Candle Volume",
         ""
     ]
+
+    if not signals:
+
+        lines.append(
+            "✅ هیچ ارزی با RSI >= 70 "
+            "یا RSI <= 30 پیدا نشد."
+        )
+
+        return "\n".join(lines)
+
+    # ===============================================
+    # OVERBOUGHT
+    # ===============================================
 
     overbought = [
         x
         for x in signals
-        if x["status"] == "OVERBOUGHT"
-    ]
-
-    oversold = [
-        x
-        for x in signals
-        if x["status"] == "OVERSOLD"
+        if x["status"]
+        == "🔴 OVERBOUGHT"
     ]
 
     if overbought:
@@ -787,12 +923,49 @@ def make_message(signals):
         for item in overbought:
 
             lines.append(
-                f"🔴 {item['symbol']} | "
-                f"{item['timeframe']} | "
-                f"RSI: {item['rsi']:.2f}"
+                f"🔴 {item['symbol']}"
             )
 
-        lines.append("")
+            lines.append(
+                f"⏱ تایم‌فریم: "
+                f"{item['timeframe']}"
+            )
+
+            lines.append(
+                f"📊 RSI: "
+                f"{item['rsi']:.2f}"
+            )
+
+            lines.append(
+                f"📈 حجم فعلی: "
+                f"{item['volume_status']}"
+            )
+
+            lines.append(
+                f"📊 نسبت حجم: "
+                f"{item['volume_ratio']:.2f}x "
+                f"میانگین 20 کندل"
+            )
+
+            lines.append(
+                f"📈 TradingView:\n"
+                f"{item['tradingview']}"
+            )
+
+            lines.append(
+                "────────────────"
+            )
+
+    # ===============================================
+    # OVERSOLD
+    # ===============================================
+
+    oversold = [
+        x
+        for x in signals
+        if x["status"]
+        == "🟢 OVERSOLD"
+    ]
 
     if oversold:
 
@@ -805,17 +978,38 @@ def make_message(signals):
         for item in oversold:
 
             lines.append(
-                f"🟢 {item['symbol']} | "
-                f"{item['timeframe']} | "
-                f"RSI: {item['rsi']:.2f}"
+                f"🟢 {item['symbol']}"
             )
 
-    if not signals:
+            lines.append(
+                f"⏱ تایم‌فریم: "
+                f"{item['timeframe']}"
+            )
 
-        lines.append(
-            "✅ No RSI >= 70 "
-            "or RSI <= 30 found."
-        )
+            lines.append(
+                f"📊 RSI: "
+                f"{item['rsi']:.2f}"
+            )
+
+            lines.append(
+                f"📈 حجم فعلی: "
+                f"{item['volume_status']}"
+            )
+
+            lines.append(
+                f"📊 نسبت حجم: "
+                f"{item['volume_ratio']:.2f}x "
+                f"میانگین 20 کندل"
+            )
+
+            lines.append(
+                f"📈 TradingView:\n"
+                f"{item['tradingview']}"
+            )
+
+            lines.append(
+                "────────────────"
+            )
 
     return "\n".join(lines)
 
@@ -836,7 +1030,8 @@ def send_to_all_users(
 
     active_users = [
         chat_id
-        for chat_id, user in users.items()
+        for chat_id, user
+        in users.items()
         if user.get(
             "active",
             False
@@ -844,19 +1039,22 @@ def send_to_all_users(
     ]
 
     print(
-        f"Active users: {len(active_users)}"
+        f"Active users: "
+        f"{len(active_users)}"
     )
 
     if not active_users:
+
         print(
             "No active users."
         )
+
         return
 
     for chat_id in active_users:
 
         print(
-            f"Sending signal to {chat_id}"
+            f"Sending to {chat_id}"
         )
 
         success = send_long_message(
@@ -867,7 +1065,8 @@ def send_to_all_users(
         if not success:
 
             print(
-                f"Could not send to {chat_id}"
+                f"Failed to send "
+                f"to {chat_id}"
             )
 
         time.sleep(0.2)
@@ -888,14 +1087,15 @@ def main():
     )
 
     print(
+        "TOP 100 + VOLUME + TRADINGVIEW"
+    )
+
+    print(
         "======================================"
     )
 
     # Load users
     database = load_users()
-
-    # Telegram preparation
-    prepare_telegram()
 
     # دریافت /start /stop
     database = process_updates(
@@ -906,7 +1106,8 @@ def main():
     signals = scan_market()
 
     print(
-        f"Signals found: {len(signals)}"
+        f"Signals found: "
+        f"{len(signals)}"
     )
 
     # Create message
@@ -914,7 +1115,7 @@ def main():
         signals
     )
 
-    # Send to active users
+    # Send to all active users
     send_to_all_users(
         database,
         message
