@@ -1,14 +1,12 @@
 {
   "users": {
     "active": true,
-    "username": "",
-    "first_name": "",
+    "created_at": "2026-09-16T18:35:46.716863+00:00",
     "last_seen": ""
   },
   "last_update_id": {
     "active": true,
-    "username": "",
-    "first_name": "",
+    "created_at": "2026-09-16T18:35:46.716892+00:00",
     "last_seen": ""
   }
 }
