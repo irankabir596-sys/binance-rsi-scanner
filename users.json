@@ -1,20 +1,17 @@
 {
   "users": {
     "active": true,
-    "username": "",
-    "first_name": "",
-    "last_seen": ""
+    "authorized": true,
+    "updated_at": null
   },
   "last_update_id": {
     "active": true,
-    "username": "",
-    "first_name": "",
-    "last_seen": ""
+    "authorized": true,
+    "updated_at": null
   },
   "1413646760": {
     "active": true,
-    "username": "",
-    "first_name": "",
-    "last_seen": "2026-09-16T19:10:24.785013+00:00"
+    "authorized": true,
+    "updated_at": null
   }
 }
