@@ -1,20 +1,24 @@
 import os
-import time
 import json
+import time
 import requests
+from datetime import datetime, timezone
 
 
-# =====================================================
+# =========================================================
 # CONFIG
-# =====================================================
+# =========================================================
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 BINANCE = "https://data-api.binance.vision"
 
-TOP_COINS = 100
-RSI_PERIOD = 14
+POLY_GAMMA = "https://gamma-api.polymarket.com"
+POLY_CLOB = "https://clob.polymarket.com"
 
+TOP_COINS = 100
+
+RSI_PERIOD = 14
 VOLUME_LOOKBACK = 20
 
 LOW_VOLUME_RATIO = 0.75
@@ -25,7 +29,7 @@ TIMEFRAMES = {
     "15m": "15m",
     "1h": "1h",
     "4h": "4h",
-    "1D": "1d",
+    "1D": "1d"
 }
 
 TIMEFRAME_ORDER = {
@@ -33,442 +37,366 @@ TIMEFRAME_ORDER = {
     "15m": 1,
     "1h": 2,
     "4h": 3,
-    "1D": 4,
+    "1D": 4
 }
 
-TELEGRAM_LIMIT = 3500
+TRADINGVIEW_INTERVAL = {
+    "5m": "5",
+    "15m": "15",
+    "1h": "60",
+    "4h": "240",
+    "1D": "D"
+}
 
 USERS_FILE = "users.json"
 STATE_FILE = "state.json"
 
+TELEGRAM_LIMIT = 3500
+REQUEST_TIMEOUT = 15
 
-# =====================================================
-# SESSION
-# =====================================================
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 RSI-Polymarket-Bot/1.0"
+}
 
 session = requests.Session()
-
-session.headers.update({
-    "User-Agent": "Binance-RSI-Scanner/4.0"
-})
+session.headers.update(HEADERS)
 
 
-# =====================================================
-# JSON DATABASE
-# =====================================================
+# =========================================================
+# JSON
+# =========================================================
 
-def load_json(
-    filename,
-    default
-):
-
-    if not os.path.exists(filename):
-        return default
+def load_json(filename, default):
 
     try:
+
+        if not os.path.exists(filename):
+            return default
 
         with open(
             filename,
             "r",
             encoding="utf-8"
-        ) as file:
+        ) as f:
 
-            return json.load(file)
+            return json.load(f)
 
-    except Exception as error:
+    except Exception as e:
 
         print(
-            f"Could not read {filename}: {error}"
+            f"JSON LOAD ERROR {filename}: {e}"
         )
 
         return default
 
 
-def save_json(
-    filename,
-    data
-):
+def save_json(filename, data):
 
-    with open(
-        filename,
-        "w",
-        encoding="utf-8"
-    ) as file:
+    try:
 
-        json.dump(
-            data,
-            file,
-            ensure_ascii=False,
-            indent=2
+        with open(
+            filename,
+            "w",
+            encoding="utf-8"
+        ) as f:
+
+            json.dump(
+                data,
+                f,
+                ensure_ascii=False,
+                indent=2
+            )
+
+    except Exception as e:
+
+        print(
+            f"JSON SAVE ERROR {filename}: {e}"
         )
 
 
-def load_users():
+# =========================================================
+# TELEGRAM
+# =========================================================
 
-    return load_json(
-        USERS_FILE,
-        {
-            "users": {},
-            "last_update_id": 0
-        }
-    )
-
-
-def save_users(database):
-
-    save_json(
-        USERS_FILE,
-        database
-    )
-
-
-def load_state():
-
-    return load_json(
-        STATE_FILE,
-        {}
-    )
-
-
-def save_state(state):
-
-    save_json(
-        STATE_FILE,
-        state
-    )
-
-
-# =====================================================
-# TELEGRAM API
-# =====================================================
-
-def telegram_api(
-    method,
-    data=None
-):
+def telegram_api(method, params=None):
 
     url = (
         f"https://api.telegram.org/"
         f"bot{BOT_TOKEN}/{method}"
     )
 
-    response = session.post(
-        url,
-        data=data or {},
-        timeout=30
-    )
-
-    response.raise_for_status()
-
-    result = response.json()
-
-    if not result.get("ok"):
-
-        raise RuntimeError(
-            f"Telegram API error: {result}"
-        )
-
-    return result
-
-
-# =====================================================
-# SEND MESSAGE
-# =====================================================
-
-def send_message(
-    chat_id,
-    message
-):
-
     try:
 
-        telegram_api(
-            "sendMessage",
-            {
-                "chat_id": chat_id,
-                "text": message
-            }
+        response = session.post(
+            url,
+            data=params or {},
+            timeout=REQUEST_TIMEOUT
         )
 
-        return True
+        response.raise_for_status()
 
-    except Exception as error:
+        return response.json()
+
+    except Exception as e:
 
         print(
-            f"Telegram send error "
-            f"for {chat_id}: {error}"
+            f"TELEGRAM ERROR {method}: {e}"
         )
 
-        return False
+        return None
 
 
-def send_long_message(
-    chat_id,
-    message
-):
+def send_message(chat_id, text):
 
-    if len(message) <= TELEGRAM_LIMIT:
-
-        return send_message(
-            chat_id,
-            message
-        )
-
-    parts = []
-    current = ""
-
-    for line in message.splitlines():
-
-        if len(line) > TELEGRAM_LIMIT:
-
-            if current:
-
-                parts.append(current)
-                current = ""
-
-            for i in range(
-                0,
-                len(line),
-                TELEGRAM_LIMIT
-            ):
-
-                parts.append(
-                    line[
-                        i:i + TELEGRAM_LIMIT
-                    ]
-                )
-
-            continue
-
-        if (
-            len(current)
-            + len(line)
-            + 1
-            > TELEGRAM_LIMIT
-        ):
-
-            if current:
-                parts.append(current)
-
-            current = line
-
-        else:
-
-            if current:
-                current += "\n"
-
-            current += line
-
-    if current:
-        parts.append(current)
-
-    success = True
-
-    total = len(parts)
-
-    for number, part in enumerate(
-        parts,
-        start=1
-    ):
-
-        result = send_message(
-            chat_id,
-            f"📄 Part {number}/{total}\n\n"
-            + part
-        )
-
-        if not result:
-            success = False
-
-        time.sleep(0.3)
-
-    return success
-
-
-# =====================================================
-# TELEGRAM USERS
-# =====================================================
-
-def process_updates(database):
-
-    offset = (
-        database.get(
-            "last_update_id",
-            0
-        )
-        + 1
+    return telegram_api(
+        "sendMessage",
+        {
+            "chat_id": chat_id,
+            "text": text
+        }
     )
+
+
+def send_long_message(chat_id, text):
+
+    while len(text) > TELEGRAM_LIMIT:
+
+        cut = text.rfind(
+            "\n",
+            0,
+            TELEGRAM_LIMIT
+        )
+
+        if cut <= 0:
+            cut = TELEGRAM_LIMIT
+
+        part = text[:cut]
+
+        send_message(
+            chat_id,
+            part
+        )
+
+        text = text[cut:].lstrip()
+
+    if text:
+
+        send_message(
+            chat_id,
+            text
+        )
+
+
+# =========================================================
+# TELEGRAM USERS
+# =========================================================
+
+def process_updates(users):
 
     try:
 
         result = telegram_api(
-            "getUpdates",
-            {
-                "offset": offset,
-                "limit": 100,
-                "timeout": 1,
-                "allowed_updates": json.dumps(
-                    ["message"]
-                )
-            }
+            "getUpdates"
         )
 
-    except Exception as error:
+        if not result:
+            return users
+
+        if not result.get("ok"):
+            return users
+
+        updates = result.get(
+            "result",
+            []
+        )
+
+        for update in updates:
+
+            message = update.get(
+                "message"
+            )
+
+            if not message:
+                continue
+
+            chat = message.get(
+                "chat"
+            )
+
+            if not chat:
+                continue
+
+            chat_id = str(
+                chat.get("id")
+            )
+
+            text = message.get(
+                "text",
+                ""
+            ).strip().lower()
+
+            if text.startswith("/start"):
+
+                users[chat_id] = {
+                    "active": True
+                }
+
+                send_message(
+                    chat_id,
+                    "✅ ربات فعال شد.\n\n"
+                    "سیگنال‌های جدید RSI "
+                    "برای شما ارسال می‌شوند."
+                )
+
+            elif text.startswith("/stop"):
+
+                users[chat_id] = {
+                    "active": False
+                }
+
+                send_message(
+                    chat_id,
+                    "⛔ دریافت سیگنال متوقف شد."
+                )
+
+            elif text.startswith("/status"):
+
+                active = users.get(
+                    chat_id,
+                    {}
+                ).get(
+                    "active",
+                    False
+                )
+
+                status = (
+                    "فعال 🟢"
+                    if active
+                    else
+                    "غیرفعال 🔴"
+                )
+
+                send_message(
+                    chat_id,
+                    f"وضعیت ربات: {status}"
+                )
+
+        return users
+
+    except Exception as e:
 
         print(
-            f"Telegram update error: {error}"
+            f"UPDATE ERROR: {e}"
         )
 
-        return database
+        return users
 
-    updates = result.get(
-        "result",
-        []
+
+def get_active_users(users):
+
+    return [
+        chat_id
+        for chat_id, info in users.items()
+        if info.get("active") is True
+    ]
+
+
+# =========================================================
+# BINANCE TOP 100
+# =========================================================
+
+def get_top_coins():
+
+    url = (
+        f"{BINANCE}/api/v3/ticker/24hr"
     )
 
-    print(
-        f"Telegram updates: {len(updates)}"
-    )
+    try:
 
-    for update in updates:
-
-        update_id = update.get(
-            "update_id"
+        response = session.get(
+            url,
+            timeout=REQUEST_TIMEOUT
         )
 
-        if update_id is not None:
+        response.raise_for_status()
 
-            database["last_update_id"] = max(
-                database.get(
-                    "last_update_id",
-                    0
-                ),
-                update_id
+        data = response.json()
+
+        coins = []
+
+        for item in data:
+
+            symbol = item.get(
+                "symbol",
+                ""
             )
 
-        message = update.get(
-            "message"
-        )
-
-        if not message:
-            continue
-
-        chat = message.get(
-            "chat"
-        )
-
-        if not chat:
-            continue
-
-        chat_id = str(
-            chat.get("id")
-        )
-
-        text = message.get(
-            "text",
-            ""
-        ).strip().lower()
-
-        if not chat_id:
-            continue
-
-        # =========================================
-        # START
-        # =========================================
-
-        if text.startswith("/start"):
-
-            database["users"][chat_id] = {
-                "active": True,
-                "username": chat.get(
-                    "username",
-                    ""
-                ),
-                "first_name": chat.get(
-                    "first_name",
-                    ""
-                )
-            }
-
-            send_message(
-                chat_id,
-                "🤖 ربات RSI فعال شد.\n\n"
-                "سیگنال فقط زمانی ارسال می‌شود "
-                "که RSI وارد محدوده شود.\n\n"
-                "🔴 ورود RSI به بالای 70\n"
-                "🟢 ورود RSI به زیر 30\n\n"
-                "📈 حجم فعلی نیز نمایش داده می‌شود.\n"
-                "📊 لینک TradingView نیز ارسال می‌شود.\n\n"
-                "برای توقف:\n"
-                "/stop"
-            )
-
-            print(
-                f"User STARTED: {chat_id}"
-            )
-
-        # =========================================
-        # STOP
-        # =========================================
-
-        elif text.startswith("/stop"):
-
-            if chat_id in database["users"]:
-
-                database["users"][
-                    chat_id
-                ]["active"] = False
-
-            send_message(
-                chat_id,
-                "⛔ دریافت سیگنال‌ها متوقف شد.\n\n"
-                "برای فعال‌سازی دوباره:\n"
-                "/start"
-            )
-
-            print(
-                f"User STOPPED: {chat_id}"
-            )
-
-        # =========================================
-        # STATUS
-        # =========================================
-
-        elif text.startswith("/status"):
-
-            user = database["users"].get(
-                chat_id
-            )
-
-            if user and user.get(
-                "active",
-                False
+            if not symbol.endswith(
+                "USDT"
             ):
+                continue
 
-                send_message(
-                    chat_id,
-                    "🟢 وضعیت: فعال\n\n"
-                    "سیگنال‌های ورود RSI برای شما "
-                    "ارسال می‌شود."
+            # Remove leveraged tokens
+            if any(
+                x in symbol
+                for x in [
+                    "UPUSDT",
+                    "DOWNUSDT",
+                    "BULLUSDT",
+                    "BEARUSDT"
+                ]
+            ):
+                continue
+
+            try:
+
+                volume = float(
+                    item.get(
+                        "quoteVolume",
+                        0
+                    )
                 )
 
-            else:
+            except Exception:
 
-                send_message(
-                    chat_id,
-                    "🔴 وضعیت: غیرفعال\n\n"
-                    "برای فعال‌سازی:\n"
-                    "/start"
+                continue
+
+            coins.append(
+                (
+                    symbol,
+                    volume
                 )
+            )
 
-    save_users(database)
+        coins.sort(
+            key=lambda x: x[1],
+            reverse=True
+        )
 
-    return database
+        top = [
+            symbol
+            for symbol, _ in
+            coins[:TOP_COINS]
+        ]
+
+        print(
+            f"Top Binance coins: {len(top)}"
+        )
+
+        return top
+
+    except Exception as e:
+
+        print(
+            f"BINANCE TOP ERROR: {e}"
+        )
+
+        return []
 
 
-# =====================================================
+# =========================================================
 # RSI
-# =====================================================
+# =========================================================
 
 def calculate_rsi(
     prices,
@@ -478,178 +406,86 @@ def calculate_rsi(
     if len(prices) < period + 1:
         return None
 
-    gains = []
-    losses = []
+    changes = []
 
     for i in range(
         1,
         len(prices)
     ):
 
-        change = (
-            prices[i]
-            - prices[i - 1]
+        changes.append(
+            prices[i] - prices[i - 1]
         )
 
-        if change > 0:
+    gains = [
+        max(x, 0)
+        for x in changes
+    ]
 
-            gains.append(change)
-            losses.append(0.0)
+    losses = [
+        max(-x, 0)
+        for x in changes
+    ]
 
-        else:
-
-            gains.append(0.0)
-            losses.append(-change)
-
-    average_gain = (
+    avg_gain = (
         sum(gains[:period])
         / period
     )
 
-    average_loss = (
+    avg_loss = (
         sum(losses[:period])
         / period
     )
 
     for i in range(
         period,
-        len(gains)
+        len(changes)
     ):
 
-        average_gain = (
+        avg_gain = (
             (
-                average_gain
-                * (period - 1)
+                avg_gain * (period - 1)
             )
             + gains[i]
         ) / period
 
-        average_loss = (
+        avg_loss = (
             (
-                average_loss
-                * (period - 1)
+                avg_loss * (period - 1)
             )
             + losses[i]
         ) / period
 
-    if average_loss == 0:
-
-        if average_gain == 0:
-            return 50.0
+    if avg_loss == 0:
 
         return 100.0
 
-    rs = (
-        average_gain
-        / average_loss
-    )
+    rs = avg_gain / avg_loss
 
     return (
         100
-        - (
-            100
-            / (1 + rs)
+        -
+        (
+            100 / (1 + rs)
         )
     )
 
 
-# =====================================================
-# TOP 100
-# =====================================================
-
-def get_top_coins():
-
-    url = (
-        BINANCE
-        + "/api/v3/ticker/24hr"
-    )
-
-    response = session.get(
-        url,
-        timeout=30
-    )
-
-    response.raise_for_status()
-
-    data = response.json()
-
-    if not isinstance(data, list):
-
-        raise RuntimeError(
-            "Invalid Binance ticker response"
-        )
-
-    coins = []
-
-    excluded = (
-        "UPUSDT",
-        "DOWNUSDT",
-        "BULLUSDT",
-        "BEARUSDT",
-    )
-
-    for item in data:
-
-        symbol = item.get(
-            "symbol",
-            ""
-        )
-
-        if not symbol.endswith(
-            "USDT"
-        ):
-            continue
-
-        if symbol.endswith(
-            excluded
-        ):
-            continue
-
-        try:
-
-            volume = float(
-                item["quoteVolume"]
-            )
-
-        except (
-            KeyError,
-            ValueError,
-            TypeError
-        ):
-
-            continue
-
-        coins.append(
-            (
-                symbol,
-                volume
-            )
-        )
-
-    coins.sort(
-        key=lambda x: x[1],
-        reverse=True
-    )
-
-    return [
-        symbol
-        for symbol, volume
-        in coins[:TOP_COINS]
-    ]
-
-
-# =====================================================
-# CANDLE DATA
-# =====================================================
+# =========================================================
+# BINANCE CANDLE DATA
+# =========================================================
 
 def get_candle_data(
     symbol,
-    interval
+    timeframe
 ):
 
+    interval = TIMEFRAMES[
+        timeframe
+    ]
+
     url = (
-        BINANCE
-        + "/api/v3/klines"
+        f"{BINANCE}/api/v3/klines"
     )
 
     params = {
@@ -658,166 +494,914 @@ def get_candle_data(
         "limit": 100
     }
 
-    response = session.get(
-        url,
-        params=params,
-        timeout=30
-    )
-
-    response.raise_for_status()
-
-    data = response.json()
-
-    if not isinstance(data, list):
-        return None
-
-    minimum = (
-        RSI_PERIOD
-        + VOLUME_LOOKBACK
-        + 2
-    )
-
-    if len(data) < minimum:
-        return None
-
-    # =============================================
-    # RSI از کندل‌های بسته شده
-    # =============================================
-
-    closed_data = data[:-1]
-
-    closes = []
-
-    for candle in closed_data:
-
-        try:
-
-            closes.append(
-                float(candle[4])
-            )
-
-        except (
-            IndexError,
-            ValueError,
-            TypeError
-        ):
-
-            continue
-
-    rsi = calculate_rsi(
-        closes,
-        RSI_PERIOD
-    )
-
-    if rsi is None:
-        return None
-
-    # =============================================
-    # حجم کندل در حال تشکیل
-    # =============================================
-
-    current_candle = data[-1]
-
     try:
 
+        response = session.get(
+            url,
+            params=params,
+            timeout=REQUEST_TIMEOUT
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        if len(data) < 30:
+            return None
+
+        # Last candle = current/forming
+        # RSI = closed candles
+        closed = data[:-1]
+
+        closes = [
+            float(candle[4])
+            for candle in closed
+        ]
+
+        rsi_value = calculate_rsi(
+            closes,
+            RSI_PERIOD
+        )
+
+        if rsi_value is None:
+            return None
+
         current_volume = float(
-            current_candle[5]
+            data[-1][5]
         )
 
         previous_volumes = [
             float(candle[5])
-            for candle
-            in data[
-                -VOLUME_LOOKBACK - 1:
-                -1
-            ]
+            for candle in
+            closed[-VOLUME_LOOKBACK:]
         ]
 
-    except (
-        IndexError,
-        ValueError,
-        TypeError
-    ):
+        if not previous_volumes:
+            return None
+
+        average_volume = (
+            sum(previous_volumes)
+            / len(previous_volumes)
+        )
+
+        if average_volume <= 0:
+
+            volume_ratio = 0
+
+        else:
+
+            volume_ratio = (
+                current_volume
+                / average_volume
+            )
+
+        # -------------------------
+        # Trend
+        # -------------------------
+
+        recent = closes[-5:]
+        previous = closes[-20:-5]
+
+        if not previous:
+
+            trend = "خنثی"
+
+        else:
+
+            recent_avg = (
+                sum(recent)
+                / len(recent)
+            )
+
+            previous_avg = (
+                sum(previous)
+                / len(previous)
+            )
+
+            if previous_avg == 0:
+
+                trend = "خنثی"
+
+            else:
+
+                change = (
+                    (
+                        recent_avg
+                        -
+                        previous_avg
+                    )
+                    /
+                    previous_avg
+                ) * 100
+
+                if change > 0.20:
+
+                    trend = "صعودی"
+
+                elif change < -0.20:
+
+                    trend = "نزولی"
+
+                else:
+
+                    trend = "خنثی"
+
+        return {
+            "rsi": rsi_value,
+            "volume_ratio": volume_ratio,
+            "trend": trend
+        }
+
+    except Exception as e:
+
+        print(
+            f"CANDLE ERROR "
+            f"{symbol} {timeframe}: {e}"
+        )
 
         return None
 
-    if not previous_volumes:
-        return None
 
-    average_volume = (
-        sum(previous_volumes)
-        / len(previous_volumes)
-    )
-
-    if average_volume <= 0:
-        return None
-
-    volume_ratio = (
-        current_volume
-        / average_volume
-    )
-
-    return {
-        "rsi": rsi,
-        "current_volume": current_volume,
-        "average_volume": average_volume,
-        "volume_ratio": volume_ratio
-    }
-
-
-# =====================================================
-# VOLUME STATUS
-# =====================================================
+# =========================================================
+# VOLUME
+# =========================================================
 
 def get_volume_status(
     ratio
 ):
 
-    if ratio < LOW_VOLUME_RATIO:
+    if ratio >= HIGH_VOLUME_RATIO:
+        return "🔥 زیاد"
 
-        return "🟢 کم"
-
-    if ratio < HIGH_VOLUME_RATIO:
-
+    if ratio >= LOW_VOLUME_RATIO:
         return "🟡 متوسط"
 
-    return "🔥 زیاد"
+    return "🟢 کم"
 
 
-# =====================================================
-# TRADINGVIEW
-# =====================================================
+# =========================================================
+# POLYMARKET HELPERS
+# =========================================================
 
-def tradingview_link(
-    symbol,
-    timeframe
+def parse_json_field(
+    value,
+    default=None
 ):
 
-    tv_timeframes = {
-        "5m": "5",
-        "15m": "15",
-        "1h": "60",
-        "4h": "240",
-        "1D": "D"
+    if value is None:
+        return default
+
+    if isinstance(
+        value,
+        list
+    ):
+        return value
+
+    if isinstance(
+        value,
+        dict
+    ):
+        return value
+
+    if isinstance(
+        value,
+        str
+    ):
+
+        try:
+
+            return json.loads(
+                value
+            )
+
+        except Exception:
+
+            return default
+
+    return default
+
+
+def parse_date(value):
+
+    if not value:
+        return None
+
+    try:
+
+        text = str(value)
+
+        if text.endswith("Z"):
+
+            text = (
+                text[:-1]
+                + "+00:00"
+            )
+
+        dt = datetime.fromisoformat(
+            text
+        )
+
+        if dt.tzinfo is None:
+
+            dt = dt.replace(
+                tzinfo=timezone.utc
+            )
+
+        return dt.astimezone(
+            timezone.utc
+        )
+
+    except Exception:
+
+        return None
+
+
+# =========================================================
+# DETECT CRYPTO + TIMEFRAME FROM MARKET
+# =========================================================
+
+def detect_asset(text):
+
+    text = text.lower()
+
+    # Important:
+    # check longer names first
+
+    assets = {
+        "BTC": [
+            "bitcoin",
+            "btc"
+        ],
+
+        "ETH": [
+            "ethereum",
+            "eth"
+        ],
+
+        "SOL": [
+            "solana",
+            "sol"
+        ],
+
+        "XRP": [
+            "xrp",
+            "ripple"
+        ],
+
+        "DOGE": [
+            "dogecoin",
+            "doge"
+        ],
+
+        "BNB": [
+            "bnb",
+            "binance coin"
+        ],
+
+        "ADA": [
+            "cardano",
+            "ada"
+        ],
+
+        "AVAX": [
+            "avalanche",
+            "avax"
+        ],
+
+        "LINK": [
+            "chainlink",
+            "link"
+        ],
+
+        "SUI": [
+            "sui"
+        ],
+
+        "DOT": [
+            "polkadot",
+            "dot"
+        ],
+
+        "TRX": [
+            "tron",
+            "trx"
+        ],
+
+        "LTC": [
+            "litecoin",
+            "ltc"
+        ],
+
+        "BCH": [
+            "bitcoin cash",
+            "bch"
+        ],
+
+        "SHIB": [
+            "shiba",
+            "shib"
+        ],
+
+        "UNI": [
+            "uniswap",
+            "uni"
+        ]
     }
 
-    tv_tf = tv_timeframes.get(
-        timeframe,
-        "5"
+    # Prefer exact ticker boundaries
+    for asset, names in assets.items():
+
+        for name in names:
+
+            if name in text:
+
+                return asset
+
+    return None
+
+
+def detect_timeframe(text):
+
+    text = text.lower()
+
+    # 15m before 5m
+    if (
+        "15 minute" in text
+        or "15 minutes" in text
+        or "15-min" in text
+        or "15m" in text
+    ):
+
+        return "15m"
+
+    if (
+        "5 minute" in text
+        or "5 minutes" in text
+        or "5-min" in text
+        or "5m" in text
+    ):
+
+        return "5m"
+
+    if (
+        "4 hour" in text
+        or "4 hours" in text
+        or "4-hour" in text
+        or "4h" in text
+    ):
+
+        return "4h"
+
+    if (
+        "hourly" in text
+        or "1 hour" in text
+        or "1-hour" in text
+        or "1h" in text
+    ):
+
+        return "1h"
+
+    if (
+        "daily" in text
+        or "1 day" in text
+        or "1-day" in text
+        or "1d" in text
+    ):
+
+        return "1D"
+
+    return None
+
+
+def is_up_down_market(
+    text
+):
+
+    text = text.lower()
+
+    patterns = [
+        "up or down",
+        "up/down",
+        "updown"
+    ]
+
+    return any(
+        p in text
+        for p in patterns
     )
 
-    return (
-        "https://www.tradingview.com/"
-        "chart/?symbol=BINANCE:"
-        + symbol
-        + "&interval="
-        + tv_tf
+
+# =========================================================
+# DOWNLOAD ACTIVE POLYMARKET MARKETS
+# =========================================================
+
+def get_active_polymarket_markets():
+
+    all_markets = []
+
+    offset = 0
+
+    page_size = 100
+
+    max_pages = 10
+
+    for _ in range(max_pages):
+
+        params = {
+            "active": "true",
+            "closed": "false",
+            "limit": page_size,
+            "offset": offset,
+            "order": "volume24hr",
+            "ascending": "false"
+        }
+
+        try:
+
+            response = session.get(
+                f"{POLY_GAMMA}/markets",
+                params=params,
+                timeout=REQUEST_TIMEOUT
+            )
+
+            response.raise_for_status()
+
+            data = response.json()
+
+            if not isinstance(
+                data,
+                list
+            ):
+
+                break
+
+            if not data:
+                break
+
+            all_markets.extend(
+                data
+            )
+
+            print(
+                f"Polymarket page "
+                f"{_ + 1}: "
+                f"{len(data)} markets"
+            )
+
+            if len(data) < page_size:
+                break
+
+            offset += page_size
+
+        except Exception as e:
+
+            print(
+                f"POLYMARKET ERROR: {e}"
+            )
+
+            break
+
+    print(
+        f"Total Polymarket markets: "
+        f"{len(all_markets)}"
+    )
+
+    return all_markets
+
+
+# =========================================================
+# BUILD POLYMARKET INDEX
+# =========================================================
+
+def build_polymarket_index(
+    markets
+):
+
+    index = {}
+
+    now = datetime.now(
+        timezone.utc
+    )
+
+    for market in markets:
+
+        if not isinstance(
+            market,
+            dict
+        ):
+            continue
+
+        if market.get(
+            "active"
+        ) is False:
+            continue
+
+        if market.get(
+            "closed"
+        ) is True:
+            continue
+
+        question = str(
+            market.get(
+                "question",
+                ""
+            )
+        )
+
+        description = str(
+            market.get(
+                "description",
+                ""
+            )
+        )
+
+        slug = str(
+            market.get(
+                "slug",
+                ""
+            )
+        )
+
+        group_title = str(
+            market.get(
+                "groupItemTitle",
+                ""
+            )
+        )
+
+        combined = (
+            question
+            + " "
+            + description
+            + " "
+            + slug
+            + " "
+            + group_title
+        ).lower()
+
+        # Only crypto Up/Down markets
+        if not is_up_down_market(
+            combined
+        ):
+            continue
+
+        asset = detect_asset(
+            combined
+        )
+
+        timeframe = detect_timeframe(
+            combined
+        )
+
+        if not asset or not timeframe:
+            continue
+
+        end_date = parse_date(
+            market.get(
+                "endDate"
+            )
+        )
+
+        if end_date:
+
+            if end_date <= now:
+                continue
+
+        key = (
+            asset,
+            timeframe
+        )
+
+        index.setdefault(
+            key,
+            []
+        ).append(
+            market
+        )
+
+    # Sort each group:
+    # currently running first,
+    # then highest 24h volume.
+    for key in index:
+
+        index[key].sort(
+            key=lambda m: (
+                -(float(
+                    m.get(
+                        "volume24hr",
+                        0
+                    ) or 0
+                )),
+            )
+        )
+
+    print(
+        f"Detected Polymarket "
+        f"crypto groups: "
+        f"{len(index)}"
+    )
+
+    for key in sorted(index):
+
+        print(
+            f"POLY: {key} -> "
+            f"{len(index[key])}"
+        )
+
+    return index
+
+
+# =========================================================
+# CHOOSE CURRENT MARKET
+# =========================================================
+
+def choose_market(
+    candidates
+):
+
+    now = datetime.now(
+        timezone.utc
+    )
+
+    current = []
+
+    future = []
+
+    for market in candidates:
+
+        start = parse_date(
+            market.get(
+                "startDate"
+            )
+        )
+
+        end = parse_date(
+            market.get(
+                "endDate"
+            )
+        )
+
+        if end and end <= now:
+            continue
+
+        if start and start <= now:
+
+            current.append(
+                market
+            )
+
+        elif start:
+
+            seconds = (
+                start - now
+            ).total_seconds()
+
+            # Future market only if
+            # it starts within 5 minutes.
+            if 0 <= seconds <= 300:
+
+                future.append(
+                    market
+                )
+
+    if current:
+
+        current.sort(
+            key=lambda m: float(
+                m.get(
+                    "volume24hr",
+                    0
+                ) or 0
+            ),
+            reverse=True
+        )
+
+        return current[0]
+
+    if future:
+
+        future.sort(
+            key=lambda m: (
+                parse_date(
+                    m.get(
+                        "startDate"
+                    )
+                )
+                or now
+            )
+        )
+
+        return future[0]
+
+    return None
+
+
+# =========================================================
+# LIVE POLYMARKET PRICE
+# =========================================================
+
+def get_polymarket_price(
+    market
+):
+
+    outcomes = parse_json_field(
+        market.get(
+            "outcomes"
+        ),
+        []
+    )
+
+    prices = parse_json_field(
+        market.get(
+            "outcomePrices"
+        ),
+        []
+    )
+
+    token_ids = parse_json_field(
+        market.get(
+            "clobTokenIds"
+        ),
+        []
+    )
+
+    if not outcomes:
+        return None
+
+    # Find UP / YES
+    up_index = None
+
+    for i, outcome in enumerate(
+        outcomes
+    ):
+
+        value = str(
+            outcome
+        ).strip().lower()
+
+        if value in [
+            "up",
+            "yes"
+        ]:
+
+            up_index = i
+            break
+
+    if up_index is None:
+
+        # For genuine binary Up/Down
+        # first outcome is usually UP.
+        up_index = 0
+
+    up_price = None
+
+    # -------------------------
+    # CLOB midpoint
+    # -------------------------
+
+    if (
+        token_ids
+        and
+        up_index < len(token_ids)
+    ):
+
+        token_id = str(
+            token_ids[up_index]
+        )
+
+        try:
+
+            response = session.get(
+                f"{POLY_CLOB}/midpoint",
+                params={
+                    "token_id": token_id
+                },
+                timeout=REQUEST_TIMEOUT
+            )
+
+            if response.ok:
+
+                data = response.json()
+
+                if data.get(
+                    "mid_price"
+                ) is not None:
+
+                    up_price = float(
+                        data[
+                            "mid_price"
+                        ]
+                    )
+
+        except Exception as e:
+
+            print(
+                f"CLOB PRICE ERROR: {e}"
+            )
+
+    # -------------------------
+    # Gamma fallback
+    # -------------------------
+
+    if up_price is None:
+
+        if (
+            prices
+            and
+            up_index < len(prices)
+        ):
+
+            try:
+
+                up_price = float(
+                    prices[up_index]
+                )
+
+            except Exception:
+
+                up_price = None
+
+    if up_price is None:
+        return None
+
+    up_price = max(
+        0,
+        min(
+            1,
+            up_price
+        )
+    )
+
+    down_price = (
+        1 - up_price
+    )
+
+    return {
+        "up": up_price,
+        "down": down_price,
+        "question": market.get(
+            "question",
+            ""
+        ),
+        "slug": market.get(
+            "slug",
+            ""
+        ),
+        "endDate": market.get(
+            "endDate",
+            ""
+        )
+    }
+
+
+# =========================================================
+# FIND MARKET FOR SYMBOL/TIMEFRAME
+# =========================================================
+
+def get_prediction_market(
+    symbol,
+    timeframe,
+    polymarket_index
+):
+
+    if not symbol.endswith(
+        "USDT"
+    ):
+        return None
+
+    asset = symbol[
+        :-4
+    ]
+
+    key = (
+        asset,
+        timeframe
+    )
+
+    candidates = polymarket_index.get(
+        key,
+        []
+    )
+
+    if not candidates:
+
+        return None
+
+    market = choose_market(
+        candidates
+    )
+
+    if not market:
+        return None
+
+    return get_polymarket_price(
+        market
     )
 
 
-# =====================================================
-# CHECK RSI ENTRY
-# =====================================================
+# =========================================================
+# RSI ENTRY
+# =========================================================
 
 def check_rsi_entry(
     state,
@@ -827,513 +1411,577 @@ def check_rsi_entry(
 ):
 
     key = (
-        symbol
-        + "_"
-        + timeframe
+        f"{symbol}_"
+        f"{timeframe}"
     )
 
-    previous_rsi = state.get(
+    previous = state.get(
         key
     )
 
-    # =============================================
-    # اولین بار که این نماد بررسی می‌شود
-    # فقط وضعیت را ذخیره می‌کنیم.
-    # =============================================
-
-    if previous_rsi is None:
+    # First scan:
+    # save RSI, no alert.
+    if previous is None:
 
         state[key] = current_rsi
 
-        return None
+        return False
 
-    signal = None
+    try:
 
-    # =============================================
-    # ورود به OVERBOUGHT
-    # از زیر 70 به بالای 70
-    # =============================================
+        previous = float(
+            previous
+        )
 
-    if (
-        previous_rsi < 70
-        and current_rsi >= 70
-    ):
+    except Exception:
 
-        signal = "🔴 OVERBOUGHT"
+        state[key] = current_rsi
 
-    # =============================================
-    # ورود به OVERSOLD
-    # از بالای 30 به زیر 30
-    # =============================================
+        return False
 
-    elif (
-        previous_rsi > 30
-        and current_rsi <= 30
-    ):
+    entered_overbought = (
+        previous < 70
+        and
+        current_rsi >= 70
+    )
 
-        signal = "🟢 OVERSOLD"
-
-    # =============================================
-    # Update state
-    # =============================================
+    entered_oversold = (
+        previous > 30
+        and
+        current_rsi <= 30
+    )
 
     state[key] = current_rsi
+
+    return (
+        entered_overbought
+        or
+        entered_oversold
+    )
+
+
+# =========================================================
+# SIGNAL
+# =========================================================
+
+def calculate_signal(
+    rsi,
+    volume_ratio,
+    trend,
+    market
+):
+
+    bullish = 0
+    bearish = 0
+
+    # RSI
+    if rsi <= 30:
+
+        bullish += 2
+
+    elif rsi >= 70:
+
+        bearish += 2
+
+    elif rsi < 45:
+
+        bullish += 1
+
+    elif rsi > 55:
+
+        bearish += 1
+
+    # Volume
+    if volume_ratio >= 1.5:
+
+        if rsi <= 45:
+            bullish += 2
+
+        elif rsi >= 55:
+            bearish += 2
+
+    elif volume_ratio >= 0.75:
+
+        if rsi <= 45:
+            bullish += 1
+
+        elif rsi >= 55:
+            bearish += 1
+
+    # Trend
+    if trend == "صعودی":
+
+        bullish += 2
+
+    elif trend == "نزولی":
+
+        bearish += 2
+
+    # Polymarket
+    if market:
+
+        up = market[
+            "up"
+        ]
+
+        down = market[
+            "down"
+        ]
+
+        if up >= 0.60:
+
+            bullish += 3
+
+        elif down >= 0.60:
+
+            bearish += 3
+
+    difference = (
+        bullish
+        - bearish
+    )
+
+    if difference >= 3:
+
+        signal = (
+            "🟢 تمایل صعودی قوی"
+        )
+
+    elif difference <= -3:
+
+        signal = (
+            "🔴 تمایل نزولی قوی"
+        )
+
+    elif difference > 0:
+
+        signal = (
+            "🟢 تمایل صعودی"
+        )
+
+    elif difference < 0:
+
+        signal = (
+            "🔴 تمایل نزولی"
+        )
+
+    else:
+
+        signal = "⚪ خنثی"
 
     return signal
 
 
-# =====================================================
-# SCAN MARKET
-# =====================================================
+# =========================================================
+# TRADINGVIEW
+# =========================================================
 
-def scan_market(
-    state
+def tradingview_link(
+    symbol,
+    timeframe
 ):
 
-    symbols = get_top_coins()
-
-    print(
-        f"Scanning TOP {len(symbols)} coins..."
+    interval = (
+        TRADINGVIEW_INTERVAL[
+            timeframe
+        ]
     )
+
+    return (
+        "https://www.tradingview.com/chart/"
+        f"?symbol=BINANCE:{symbol}"
+        f"&interval={interval}"
+    )
+
+
+# =========================================================
+# SCAN MARKET
+# =========================================================
+
+def scan_market(
+    state,
+    polymarket_index
+):
+
+    coins = get_top_coins()
+
+    if not coins:
+        return []
 
     signals = []
 
     for number, symbol in enumerate(
-        symbols,
+        coins,
         start=1
     ):
 
         print(
-            f"{number}/{len(symbols)} "
+            f"[{number}/{len(coins)}] "
             f"{symbol}"
         )
 
-        for timeframe, interval in (
-            TIMEFRAMES.items()
-        ):
+        for timeframe in TIMEFRAMES:
 
-            try:
+            data = get_candle_data(
+                symbol,
+                timeframe
+            )
 
-                result = get_candle_data(
-                    symbol,
-                    interval
-                )
+            if not data:
+                continue
 
-                if result is None:
-                    continue
+            rsi = data[
+                "rsi"
+            ]
 
-                rsi = result["rsi"]
+            # Only NEW entry
+            entered = check_rsi_entry(
+                state,
+                symbol,
+                timeframe,
+                rsi
+            )
 
-                signal = check_rsi_entry(
-                    state,
-                    symbol,
-                    timeframe,
-                    rsi
-                )
+            if not entered:
+                continue
 
-                # فقط ورود جدید به محدوده
-                if signal is None:
-                    continue
+            print(
+                f"NEW SIGNAL "
+                f"{symbol} "
+                f"{timeframe} "
+                f"RSI={rsi:.2f}"
+            )
 
-                volume_ratio = (
-                    result["volume_ratio"]
-                )
+            # Query local Polymarket index
+            # only when RSI signal happens.
+            market = get_prediction_market(
+                symbol,
+                timeframe,
+                polymarket_index
+            )
 
-                signals.append({
+            signal = calculate_signal(
+                rsi,
+                data[
+                    "volume_ratio"
+                ],
+                data[
+                    "trend"
+                ],
+                market
+            )
+
+            signals.append(
+                {
                     "symbol": symbol,
                     "timeframe": timeframe,
                     "rsi": rsi,
-                    "status": signal,
-                    "volume_ratio": volume_ratio,
+                    "volume_ratio":
+                        data[
+                            "volume_ratio"
+                        ],
                     "volume_status":
                         get_volume_status(
-                            volume_ratio
+                            data[
+                                "volume_ratio"
+                            ]
                         ),
+                    "trend":
+                        data[
+                            "trend"
+                        ],
+                    "market":
+                        market,
+                    "signal":
+                        signal,
                     "tradingview":
                         tradingview_link(
                             symbol,
                             timeframe
                         )
-                })
-
-            except Exception as error:
-
-                print(
-                    f"Error {symbol} "
-                    f"{timeframe}: {error}"
-                )
-
-            time.sleep(0.05)
+                }
+            )
 
     return signals
 
 
-# =====================================================
-# SORT SIGNALS
-# =====================================================
+# =========================================================
+# SORT
+# =========================================================
 
 def sort_signals(
     signals
 ):
 
-    overbought = [
-        item
-        for item in signals
-        if item["status"]
-        == "🔴 OVERBOUGHT"
-    ]
+    def key(item):
 
-    oversold = [
-        item
-        for item in signals
-        if item["status"]
-        == "🟢 OVERSOLD"
-    ]
+        rsi = item[
+            "rsi"
+        ]
 
-    # Overbought:
-    # RSI بالاتر اول
-    # سپس تایم‌فریم
-
-    overbought.sort(
-        key=lambda x: (
-            -x["rsi"],
-            TIMEFRAME_ORDER[
-                x["timeframe"]
+        tf = TIMEFRAME_ORDER[
+            item[
+                "timeframe"
             ]
+        ]
+
+        # Overbought first
+        if rsi >= 70:
+
+            return (
+                0,
+                -rsi,
+                tf
+            )
+
+        # Oversold second
+        return (
+            1,
+            rsi,
+            tf
         )
+
+    return sorted(
+        signals,
+        key=key
     )
 
-    # Oversold:
-    # RSI پایین‌تر اول
-    # سپس تایم‌فریم
 
-    oversold.sort(
-        key=lambda x: (
-            x["rsi"],
-            TIMEFRAME_ORDER[
-                x["timeframe"]
-            ]
+# =========================================================
+# MESSAGE
+# =========================================================
+
+def make_signal_message(
+    signal
+):
+
+    market = signal[
+        "market"
+    ]
+
+    if market:
+
+        up = (
+            market["up"]
+            * 100
         )
-    )
+
+        down = (
+            market["down"]
+            * 100
+        )
+
+        market_line = (
+            f"Market: UP "
+            f"{up:.0f}% 🟢 | "
+            f"DOWN "
+            f"{down:.0f}% 🔴"
+        )
+
+    else:
+
+        market_line = (
+            "Market: N/A ⚪"
+        )
 
     return (
-        overbought
-        + oversold
+        f"{signal['symbol']} | "
+        f"{signal['timeframe']}\n\n"
+
+        f"RSI: "
+        f"{signal['rsi']:.1f}\n"
+
+        f"Volume: "
+        f"{signal['volume_ratio']:.2f}x "
+        f"{signal['volume_status']}\n"
+
+        f"Trend: "
+        f"{signal['trend']}\n"
+
+        f"{market_line}\n\n"
+
+        f"📊 Signal:\n"
+        f"{signal['signal']}\n\n"
+
+        f"📈 TradingView:\n"
+        f"{signal['tradingview']}"
     )
 
-
-# =====================================================
-# CREATE MESSAGE
-# =====================================================
 
 def make_message(
     signals
 ):
 
+    if not signals:
+        return None
+
     signals = sort_signals(
         signals
     )
 
-    lines = [
-        "🚨 BINANCE RSI SCANNER",
+    parts = [
+        "🤖 Binance RSI + Polymarket",
         "",
-        f"🔎 TOP {TOP_COINS} USDT COINS",
-        "📊 RSI(14)",
-        "⚡ NEW RSI ENTRY SIGNALS",
+        f"🚨 سیگنال جدید: "
+        f"{len(signals)}",
         ""
     ]
 
-    if not signals:
+    for signal in signals:
 
-        lines.append(
-            "ℹ️ در این اسکن RSI جدیدی "
-            "وارد محدوده 70/30 نشد."
+        parts.append(
+            make_signal_message(
+                signal
+            )
         )
 
-        return "\n".join(lines)
-
-    overbought = [
-        x
-        for x in signals
-        if x["status"]
-        == "🔴 OVERBOUGHT"
-    ]
-
-    oversold = [
-        x
-        for x in signals
-        if x["status"]
-        == "🟢 OVERSOLD"
-    ]
-
-    # =============================================
-    # OVERBOUGHT
-    # =============================================
-
-    if overbought:
-
-        lines.append(
-            "🔴 OVERBOUGHT"
+        parts.append(
+            "\n"
+            "━━━━━━━━━━━━━━━━"
+            "\n"
         )
 
-        lines.append(
-            "ورود RSI به بالای 70"
-        )
-
-        lines.append("")
-
-        for item in overbought:
-
-            lines.append(
-                f"🔴 {item['symbol']}"
-            )
-
-            lines.append(
-                f"⏱ {item['timeframe']}"
-            )
-
-            lines.append(
-                f"📊 RSI: "
-                f"{item['rsi']:.2f}"
-            )
-
-            lines.append(
-                f"📈 حجم: "
-                f"{item['volume_status']}"
-            )
-
-            lines.append(
-                f"📊 حجم نسبت به میانگین: "
-                f"{item['volume_ratio']:.2f}x"
-            )
-
-            lines.append(
-                "📈 TradingView:"
-            )
-
-            lines.append(
-                item["tradingview"]
-            )
-
-            lines.append(
-                "────────────────"
-            )
-
-    # =============================================
-    # OVERSOLD
-    # =============================================
-
-    if oversold:
-
-        lines.append(
-            "🟢 OVERSOLD"
-        )
-
-        lines.append(
-            "ورود RSI به زیر 30"
-        )
-
-        lines.append("")
-
-        for item in oversold:
-
-            lines.append(
-                f"🟢 {item['symbol']}"
-            )
-
-            lines.append(
-                f"⏱ {item['timeframe']}"
-            )
-
-            lines.append(
-                f"📊 RSI: "
-                f"{item['rsi']:.2f}"
-            )
-
-            lines.append(
-                f"📈 حجم: "
-                f"{item['volume_status']}"
-            )
-
-            lines.append(
-                f"📊 حجم نسبت به میانگین: "
-                f"{item['volume_ratio']:.2f}x"
-            )
-
-            lines.append(
-                "📈 TradingView:"
-            )
-
-            lines.append(
-                item["tradingview"]
-            )
-
-            lines.append(
-                "────────────────"
-            )
-
-    return "\n".join(lines)
+    return "\n".join(
+        parts
+    )
 
 
-# =====================================================
-# SEND TO USERS
-# =====================================================
+# =========================================================
+# SEND
+# =========================================================
 
 def send_to_all_users(
-    database,
+    users,
     message
 ):
 
-    users = database.get(
-        "users",
-        {}
-    )
+    if not message:
+        return
 
-    active_users = [
-        chat_id
-        for chat_id, user
-        in users.items()
-        if user.get(
-            "active",
-            False
+    active_users = (
+        get_active_users(
+            users
         )
-    ]
+    )
 
     print(
-        f"Active users: "
-        f"{len(active_users)}"
+        f"Sending to "
+        f"{len(active_users)} users"
     )
-
-    if not active_users:
-
-        print(
-            "No active users."
-        )
-
-        return
 
     for chat_id in active_users:
 
-        print(
-            f"Sending to {chat_id}"
-        )
-
-        success = send_long_message(
+        send_long_message(
             chat_id,
             message
         )
 
-        if not success:
-
-            print(
-                f"Failed to send "
-                f"to {chat_id}"
-            )
-
-        time.sleep(0.2)
+        time.sleep(
+            0.15
+        )
 
 
-# =====================================================
+# =========================================================
 # MAIN
-# =====================================================
+# =========================================================
 
 def main():
 
+    print("=" * 60)
     print(
-        "======================================"
+        "BINANCE TOP 100 "
+        "+ RSI "
+        "+ POLYMARKET"
     )
+    print("=" * 60)
+
+    users = load_json(
+        USERS_FILE,
+        {}
+    )
+
+    state = load_json(
+        STATE_FILE,
+        {}
+    )
+
+    # Telegram commands
+    users = process_updates(
+        users
+    )
+
+    # -----------------------------------------------------
+    # Download active Polymarket markets ONCE
+    # -----------------------------------------------------
 
     print(
-        "BINANCE MULTI USER RSI BOT"
+        "Loading active Polymarket markets..."
     )
 
-    print(
-        "TOP 100"
+    polymarket_markets = (
+        get_active_polymarket_markets()
     )
 
-    print(
-        "RSI ENTRY + VOLUME + TRADINGVIEW"
+    polymarket_index = (
+        build_polymarket_index(
+            polymarket_markets
+        )
     )
 
-    print(
-        "======================================"
-    )
-
-    # ---------------------------------------------
-    # Users
-    # ---------------------------------------------
-
-    database = load_users()
-
-    database = process_updates(
-        database
-    )
-
-    # ---------------------------------------------
-    # RSI state
-    # ---------------------------------------------
-
-    state = load_state()
-
-    # ---------------------------------------------
-    # Scan
-    # ---------------------------------------------
+    # -----------------------------------------------------
+    # Binance scan
+    # -----------------------------------------------------
 
     signals = scan_market(
-        state
+        state,
+        polymarket_index
     )
 
-    print(
-        f"NEW RSI ENTRY SIGNALS: "
-        f"{len(signals)}"
-    )
-
-    # ---------------------------------------------
     # Save RSI state
-    # ---------------------------------------------
-
-    save_state(
+    save_json(
+        STATE_FILE,
         state
     )
 
-    # ---------------------------------------------
-    # Message
-    # ---------------------------------------------
-
+    # Create Telegram message
     message = make_message(
         signals
     )
 
-    # ---------------------------------------------
-    # Send
-    # ---------------------------------------------
+    if message:
 
-    send_to_all_users(
-        database,
-        message
-    )
+        send_to_all_users(
+            users,
+            message
+        )
 
-    # ---------------------------------------------
+    else:
+
+        print(
+            "No new RSI signals."
+        )
+
     # Save users
-    # ---------------------------------------------
+    save_json(
+        USERS_FILE,
+        users
+    )
 
-    save_users(
-        database
+    print("=" * 60)
+    print(
+        f"Users: {len(users)}"
     )
 
     print(
-        "======================================"
+        f"New signals: "
+        f"{len(signals)}"
     )
 
     print(
-        "SCAN COMPLETED"
+        "DONE"
     )
-
-    print(
-        "======================================"
-    )
+    print("=" * 60)
 
 
 if __name__ == "__main__":
-
     main()
