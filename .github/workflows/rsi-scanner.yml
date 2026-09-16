@@ -19,76 +19,60 @@ jobs:
 
     steps:
 
-      # -------------------------
-      # Checkout
-      # -------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: true
           fetch-depth: 0
 
-      # -------------------------
-      # Python
-      # -------------------------
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      # -------------------------
-      # Install dependencies
-      # -------------------------
-      - name: Install requests
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install requests
 
-      # -------------------------
-      # Check files
-      # -------------------------
-      - name: Check project files
+      - name: Check project
         run: |
-          echo "Current directory:"
-          pwd
-
-          echo ""
-          echo "Files:"
-          ls -la
-
-          echo ""
-          echo "Python version:"
+          echo "Python:"
           python --version
 
           echo ""
-          echo "Bot file:"
-          test -f bot.py && echo "bot.py exists" || (echo "ERROR: bot.py not found" && exit 1)
+          echo "Project files:"
+          ls -la
 
-      # -------------------------
-      # Run Bot
-      # -------------------------
+          echo ""
+          echo "Checking bot.py..."
+
+          if [ ! -f bot.py ]; then
+            echo "ERROR: bot.py not found!"
+            exit 1
+          fi
+
+          echo "bot.py found."
+
       - name: Run RSI Bot
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
-          echo "=============================="
+          echo "================================"
           echo "Starting Binance RSI Bot"
-          echo "=============================="
+          echo "================================"
 
           python -u bot.py 2>&1 | tee bot_error.log
 
           EXIT_CODE=${PIPESTATUS[0]}
 
           echo ""
-          echo "=============================="
+          echo "================================"
           echo "Bot exit code: $EXIT_CODE"
-          echo "=============================="
+          echo "================================"
 
           exit $EXIT_CODE
 
-      # -------------------------
-      # Upload error log
-      # -------------------------
       - name: Upload bot log
         if: always()
         uses: actions/upload-artifact@v4
@@ -97,9 +81,6 @@ jobs:
           path: bot_error.log
           if-no-files-found: warn
 
-      # -------------------------
-      # Save database
-      # -------------------------
       - name: Save database
         if: always()
         run: |
