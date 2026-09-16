@@ -1,4 +1,4 @@
-name: Binance Multi User RSI Scanner
+name: Binance RSI + Polymarket Scanner
 
 on:
   workflow_dispatch:
@@ -44,7 +44,6 @@ jobs:
 
       - name: Save database
         run: |
-
           git config user.name "RSI Telegram Bot"
           git config user.email "actions@github.com"
 
