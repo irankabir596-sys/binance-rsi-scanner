@@ -42,17 +42,17 @@ jobs:
         run: |
           python bot.py
 
-      - name: Save users database
+      - name: Save database
         run: |
 
           git config user.name "RSI Telegram Bot"
           git config user.email "actions@github.com"
 
-          git add users.json
+          git add users.json state.json
 
           if git diff --cached --quiet; then
             echo "No database changes."
           else
-            git commit -m "Update Telegram users"
+            git commit -m "Update RSI bot database"
             git push
           fi
