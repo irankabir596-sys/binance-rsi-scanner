@@ -1,15 +1,14 @@
 {
   "users": {
-    "5952888026": {
-      "active": true,
-      "username": "",
-      "first_name": "M.M.N"
-    },
-    "1413646760": {
-      "active": true,
-      "username": "Hossein_Nazarpour8",
-      "first_name": "Hossein"
-    }
+    "active": true,
+    "username": "",
+    "first_name": "",
+    "last_seen": ""
   },
-  "last_update_id": 79830076
+  "last_update_id": {
+    "active": true,
+    "username": "",
+    "first_name": "",
+    "last_seen": ""
+  }
 }
