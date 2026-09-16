@@ -2,23 +2,17 @@ name: Binance RSI + Polymarket Scanner
 
 on:
   workflow_dispatch:
-
   schedule:
     - cron: "*/5 * * * *"
 
 permissions:
   contents: write
 
-concurrency:
-  group: rsi-scanner
-  cancel-in-progress: true
-
 jobs:
   scan:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -37,15 +31,13 @@ jobs:
 
       - name: Check project
         run: |
-          echo "Python:"
+          echo "================================"
+          echo "Checking project"
+          echo "================================"
           python --version
-
           echo ""
-          echo "Project files:"
           ls -la
-
           echo ""
-          echo "Checking bot.py..."
 
           if [ ! -f bot.py ]; then
             echo "ERROR: bot.py not found!"
@@ -53,6 +45,11 @@ jobs:
           fi
 
           echo "bot.py found."
+
+      - name: Check Python syntax
+        run: |
+          python -m py_compile bot.py
+          echo "Python syntax is OK."
 
       - name: Run RSI Bot
         env:
