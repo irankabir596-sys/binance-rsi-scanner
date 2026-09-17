@@ -510,11 +510,11 @@ def volume_info(data):
             ratio = current_volume / average
 
         if ratio >= 1.5:
-            label = "🔥"
+            label = "🟢🟢🟢"
         elif ratio >= 0.75:
-            label = "🟡"
+            label = "🟡🟡"
         else:
-            label = "🟢"
+            label = "🔴"
 
         return ratio, label
 
@@ -532,14 +532,14 @@ def trend_from_klines(data):
         last = closes[-1]
 
         if last > first:
-            return "bullish", "🦬"
+            return "bullish","🦬"
         if last < first:
-            return "bearish", "🐻"
+            return "bearish","🐻"
 
-        return "neutral", "🐫"
+        return "neutral","🐫"
 
     except Exception:
-        return "neutral", "🐫"
+        return "neutral","🐫"
 
 
 # ============================================================
