@@ -532,14 +532,14 @@ def trend_from_klines(data):
         last = closes[-1]
 
         if last > first:
-            return "صعودی", "🟢"
+            return "bullish", "🦬"
         if last < first:
-            return "نزولی", "🔴"
+            return "bearish", "🐻"
 
-        return "خنثی", "⚪"
+        return "neutral", "🐫"
 
     except Exception:
-        return "خنثی", "⚪"
+        return "neutral", "🐫"
 
 
 # ============================================================
@@ -772,18 +772,18 @@ def score_signal(rsi, volume_ratio, trend, market_probability):
 
 def score_label(score):
     if score >= 3:
-        return "🟢 تمایل صعودی قوی"
+        return "strong bullish 🦬"
 
     if score > 0:
-        return "🟢 تمایل صعودی"
+        return "bullish 🦬"
 
     if score <= -3:
-        return "🔴 تمایل نزولی قوی"
+        return "strong bearish 🐻"
 
     if score < 0:
-        return "🔴 تمایل نزولی"
+        return "bearish 🐻"
 
-    return "⚪ خنثی"
+    return "neutral 🐫"
 
 
 def tv_link(symbol, timeframe):
