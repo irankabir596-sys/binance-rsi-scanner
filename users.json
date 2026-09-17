@@ -2,16 +2,22 @@
   "users": {
     "active": true,
     "authorized": true,
-    "updated_at": null
+    "username": "",
+    "first_name": "",
+    "last_seen": ""
   },
   "last_update_id": {
     "active": true,
     "authorized": true,
-    "updated_at": null
+    "username": "",
+    "first_name": "",
+    "last_seen": ""
   },
   "1413646760": {
     "active": true,
     "authorized": true,
-    "updated_at": null
+    "username": "",
+    "first_name": "",
+    "last_seen": ""
   }
 }
