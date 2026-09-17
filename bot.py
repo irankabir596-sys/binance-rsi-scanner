@@ -772,18 +772,18 @@ def score_signal(rsi, volume_ratio, trend, market_probability):
 
 def score_label(score):
     if score >= 3:
-        return "strong bullish 🦬"
+        return "Strong bullish 🦬"
 
     if score > 0:
-        return "bullish 🦬"
+        return "Bullish 🦬"
 
     if score <= -3:
-        return "strong bearish 🐻"
+        return "Strong bearish 🐻"
 
     if score < 0:
-        return "bearish 🐻"
+        return "Bearish 🐻"
 
-    return "neutral 🐫"
+    return "Neutral 🐫"
 
 
 def tv_link(symbol, timeframe):
