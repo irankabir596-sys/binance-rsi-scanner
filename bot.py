@@ -832,7 +832,7 @@ def build_message(
     return (
         f"<b>{symbol} | {timeframe}</b>\n\n"
         f"RSI: {rsi:.1f}       "
-        f"{'🔴' if rsi >= 70 else '🟢' if rsi <= 30 else '🟡'}\n"
+        f"{'📈' if rsi >= 70 else '📉' if rsi <= 30 else '🟡'}\n"
         f"Volume: {volume_ratio:.1f}x    {volume_emoji}\n"
         f"Trend: {trend}    {trend_emoji}\n"
         f"Market: {market_text}\n\n"
