@@ -23,7 +23,7 @@ CLOB_BASE = "https://clob.polymarket.com"
 
 TOP_COINS = 100
 RSI_PERIOD = 14
-UPPER_RSI = 65.0
+UPPER_RSI = 70.0
 LOWER_RSI = 30.0
 
 USERS_FILE = "users.json"
