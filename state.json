@@ -1514,5 +1514,1989 @@
     "SEIUSDT|15m": 71.67383700578246
   },
   "last_run": "2026-09-16T19:45:24.620418+00:00",
-  "telegram_offset": 79830094
+  "telegram_offset": 79830094,
+  "zones": {
+    "BTCUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 50.9678282938331
+    },
+    "NEARUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 76.7135547571714
+    },
+    "NEARUSDT|4H": {
+      "zone": "high",
+      "candle_time": 1789689600000,
+      "rsi": 88.31225546331733
+    },
+    "BTCUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.15897859490907
+    },
+    "NEARUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 77.30704858279094
+    },
+    "BTCUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 57.12973799788009
+    },
+    "ETHUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 68.40553381958648
+    },
+    "ZECUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 68.41298826309651
+    },
+    "ETHUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 64.89137384827879
+    },
+    "NEARUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 65.11947391722268
+    },
+    "ETHUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 55.46730840528105
+    },
+    "ZECUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 72.31416453743427
+    },
+    "SOLUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 55.15880910769888
+    },
+    "SOLUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.10205937957028
+    },
+    "BTCUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 67.62440901293812
+    },
+    "ZECUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 79.63482268243887
+    },
+    "ZECUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 55.56085462754018
+    },
+    "SOLUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 78.89339270495323
+    },
+    "SOLUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 79.08766421300014
+    },
+    "XRPUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 46.41816703472791
+    },
+    "XRPUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 49.6126454427665
+    },
+    "XRPUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 59.899220012413004
+    },
+    "XRPUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 59.792124732774326
+    },
+    "UNIUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 72.19297106323673
+    },
+    "UNIUSDT|4H": {
+      "zone": "high",
+      "candle_time": 1789689600000,
+      "rsi": 84.34033046153988
+    },
+    "ETHUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 54.15217630829845
+    },
+    "UNIUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 76.69943324398791
+    },
+    "UNIUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 65.98293625941906
+    },
+    "BNBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 60.32675658194164
+    },
+    "BNBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 72.93315416552349
+    },
+    "BNBUSDT|1H": {
+      "zone": "high",
+      "candle_time": 1789707600000,
+      "rsi": 82.9361061997397
+    },
+    "BNBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 70.36673038396074
+    },
+    "ARBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 68.43285154860347
+    },
+    "ARBUSDT|4H": {
+      "zone": "high",
+      "candle_time": 1789689600000,
+      "rsi": 86.80524640774823
+    },
+    "ARBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 70.30874264455412
+    },
+    "ARBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 59.79997856209946
+    },
+    "REZUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 60.96608924458256
+    },
+    "REZUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 56.60564175344615
+    },
+    "REZUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 68.39546203599116
+    },
+    "REZUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 68.00416775333716
+    },
+    "SUIUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 50.15076235561422
+    },
+    "SUIUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 75.47224873004082
+    },
+    "SUIUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 72.00685393710793
+    },
+    "SUIUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 60.098737885401356
+    },
+    "DOGEUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 47.21940464696837
+    },
+    "DOGEUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 62.94719814014465
+    },
+    "DOGEUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.948042655703
+    },
+    "DOGEUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 69.98488734319244
+    },
+    "THEUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.13914823589921
+    },
+    "THEUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 65.37768563246559
+    },
+    "THEUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 66.62958696545539
+    },
+    "THEUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 66.20055578342695
+    },
+    "ENAUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 56.02399406768403
+    },
+    "ENAUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 76.42114163288055
+    },
+    "ENAUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 69.05644120184117
+    },
+    "ENAUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 61.26561864170519
+    },
+    "RLUSDUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 59.758501954994806
+    },
+    "RLUSDUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 58.822450618407444
+    },
+    "RLUSDUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 53.86170737252998
+    },
+    "RLUSDUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 47.912087621269585
+    },
+    "ONEUSDT|1D": {
+      "zone": "high",
+      "candle_time": 1789603200000,
+      "rsi": 88.85225343609092
+    },
+    "ONEUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 66.16301432441429
+    },
+    "ONEUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 58.99813926991837
+    },
+    "ONEUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 58.11442562041309
+    },
+    "ADAUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 48.79227447275869
+    },
+    "ADAUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 69.33551842101504
+    },
+    "ADAUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 69.84067185919936
+    },
+    "ADAUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 60.11232279201222
+    },
+    "WLDUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 49.0866887841816
+    },
+    "WLDUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 72.66475582317152
+    },
+    "WLDUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 72.24439393628884
+    },
+    "WLDUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 62.00928308940695
+    },
+    "ONDOUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 54.7678207156404
+    },
+    "ONDOUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 74.37564603029126
+    },
+    "ONDOUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 70.03152090034683
+    },
+    "ONDOUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 50.02591805429785
+    },
+    "CRCLBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 45.792752774605525
+    },
+    "CRCLBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 47.71624243234895
+    },
+    "CRCLBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 63.6722703781699
+    },
+    "CRCLBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 67.45148615782578
+    },
+    "GENIUSUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 68.62869627393573
+    },
+    "GENIUSUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 61.60087381268557
+    },
+    "GENIUSUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 51.09023046530503
+    },
+    "GENIUSUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 46.28963713523102
+    },
+    "MARSCOINUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 64.2643889812052
+    },
+    "MARSCOINUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 51.96952919255935
+    },
+    "MARSCOINUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 43.890435245049176
+    },
+    "PUMPUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 53.964268701541684
+    },
+    "PUMPUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.87832668785107
+    },
+    "PUMPUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 77.63792909571772
+    },
+    "PUMPUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 67.39565002771909
+    },
+    "UUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 64.95489256722485
+    },
+    "UUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 59.60188762709536
+    },
+    "UUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 50.27075625854776
+    },
+    "UUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 49.96226050041261
+    },
+    "DASHUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 62.2445862694736
+    },
+    "DASHUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.37916238110188
+    },
+    "DASHUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 59.422919124436575
+    },
+    "DASHUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 46.6088028742608
+    },
+    "PEPEUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 55.91550696722831
+    },
+    "PEPEUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.81692153286814
+    },
+    "PEPEUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 66.81097132714254
+    },
+    "PEPEUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 48.85421074751406
+    },
+    "LINKUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.543005657283835
+    },
+    "LINKUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 64.33070792625202
+    },
+    "LINKUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 73.80929078114092
+    },
+    "LINKUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 68.18438217406677
+    },
+    "AVAXUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 54.95267378493542
+    },
+    "AVAXUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 73.05142149912311
+    },
+    "AVAXUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.75667757373009
+    },
+    "AVAXUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 64.2335669030646
+    },
+    "AVAUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 73.22499192196067
+    },
+    "AVAUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.24777459372574
+    },
+    "AVAUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 54.11412213384446
+    },
+    "AVAUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 50.47803589790151
+    },
+    "COTIUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 79.09374705397832
+    },
+    "COTIUSDT|4H": {
+      "zone": "high",
+      "candle_time": 1789689600000,
+      "rsi": 80.50359652891376
+    },
+    "COTIUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 59.695558643840634
+    },
+    "COTIUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 46.74519349732517
+    },
+    "TAOUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.16238835067954
+    },
+    "TAOUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 65.37334866671185
+    },
+    "TAOUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 61.162425161951646
+    },
+    "TAOUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 72.26878460538657
+    },
+    "LSKUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 61.18802378017887
+    },
+    "LSKUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 47.26079292086827
+    },
+    "LSKUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 42.151887681795216
+    },
+    "LSKUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 48.82461608143688
+    },
+    "PAXGUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 46.97529834041942
+    },
+    "PAXGUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 56.28275220122326
+    },
+    "PAXGUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 64.08430945427298
+    },
+    "PAXGUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 76.29158884209944
+    },
+    "XAUTUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 47.68769691181214
+    },
+    "XAUTUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 57.785370800691986
+    },
+    "XAUTUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 65.04413283993861
+    },
+    "XAUTUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 76.36664969205182
+    },
+    "AAVEUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 56.047857521805184
+    },
+    "AAVEUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 70.10034001851137
+    },
+    "AAVEUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 70.53701186677921
+    },
+    "AAVEUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 64.34040208947059
+    },
+    "TRXUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 49.007868666612055
+    },
+    "TRXUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 50.01062132037534
+    },
+    "TRXUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 61.77593377878102
+    },
+    "TRXUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 59.44377939860821
+    },
+    "牛来USDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 54.95364076170058
+    },
+    "牛来USDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 66.07512401335987
+    },
+    "牛来USDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 67.88145213704345
+    },
+    "SYNUSDT|1D": {
+      "zone": "high",
+      "candle_time": 1789603200000,
+      "rsi": 80.80764066087042
+    },
+    "SYNUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 60.89946578516661
+    },
+    "SYNUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 52.2009088713988
+    },
+    "SYNUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 58.247371038996725
+    },
+    "BCHUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 48.41262408351542
+    },
+    "BCHUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 77.22597879579978
+    },
+    "BCHUSDT|1H": {
+      "zone": "high",
+      "candle_time": 1789707600000,
+      "rsi": 80.49890358725455
+    },
+    "BCHUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 64.46511615869412
+    },
+    "APTUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.70991776371211
+    },
+    "APTUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 78.37287291885535
+    },
+    "APTUSDT|1H": {
+      "zone": "high",
+      "candle_time": 1789707600000,
+      "rsi": 80.13465804618065
+    },
+    "APTUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 57.583620960105954
+    },
+    "TRUMPUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 45.801562016502984
+    },
+    "TRUMPUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 64.99533388781438
+    },
+    "TRUMPUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 64.3194917094375
+    },
+    "TRUMPUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 58.20045899001266
+    },
+    "LTCUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 59.49663265508107
+    },
+    "LTCUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.16958653317747
+    },
+    "LTCUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 77.69524259127475
+    },
+    "LTCUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 65.81368575430379
+    },
+    "SNDKBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.741352645764664
+    },
+    "SNDKBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 65.9618389735767
+    },
+    "SNDKBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.27556028665067
+    },
+    "SNDKBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 70.1450746451384
+    },
+    "PROVEUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 63.23803590340497
+    },
+    "PROVEUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.99514380681902
+    },
+    "PROVEUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 61.668169076375165
+    },
+    "PROVEUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 55.78658147688224
+    },
+    "FETUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 57.91832393568733
+    },
+    "FETUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 74.0873230595914
+    },
+    "FETUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.28474541892916
+    },
+    "FETUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 54.35082077131522
+    },
+    "DOTUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 59.962575978193385
+    },
+    "DOTUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 74.64707714826551
+    },
+    "DOTUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 74.679885424415
+    },
+    "DOTUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 59.281489197620154
+    },
+    "MSTRBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 53.86451464864078
+    },
+    "MSTRBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 61.706756073618564
+    },
+    "MSTRBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 73.87319668499715
+    },
+    "MSTRBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 75.02672552465938
+    },
+    "XLMUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.735360876820565
+    },
+    "XLMUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 58.22765028761153
+    },
+    "XLMUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 59.09981563682985
+    },
+    "XLMUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 54.65487580998275
+    },
+    "POLUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 54.150831067372195
+    },
+    "POLUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 63.34676570077512
+    },
+    "POLUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 59.28701154306462
+    },
+    "POLUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 56.28721208727152
+    },
+    "FILUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 55.04329785221536
+    },
+    "FILUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 56.586394352977074
+    },
+    "FILUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.45438213377444
+    },
+    "FILUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 61.021877298392546
+    },
+    "SPCXBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 62.18541600390599
+    },
+    "SPCXBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.5573626705018
+    },
+    "SPCXBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.73149308249046
+    },
+    "SPCXBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 67.24310618481852
+    },
+    "CAKEUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 70.69452019357267
+    },
+    "CAKEUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 71.61272291835547
+    },
+    "CAKEUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 72.5016726901975
+    },
+    "CAKEUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 67.92788519256146
+    },
+    "XPLUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.750631114363344
+    },
+    "XPLUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 66.96960309639022
+    },
+    "XPLUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 57.74954350125194
+    },
+    "XPLUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 47.27995481731224
+    },
+    "SAGAUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 64.7944608293143
+    },
+    "SAGAUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 61.67943862535003
+    },
+    "SAGAUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 55.049749979069425
+    },
+    "SAGAUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 48.01166301610966
+    },
+    "BNCBUSDT|1H": {
+      "zone": "high",
+      "candle_time": 1789707600000,
+      "rsi": 94.46115921917973
+    },
+    "BNCBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 76.40621278661283
+    },
+    "INJUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 53.89036208218824
+    },
+    "INJUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 56.43216931593431
+    },
+    "INJUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 75.32912319678887
+    },
+    "INJUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 68.45973203942529
+    },
+    "PENGUUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 44.1875521389444
+    },
+    "PENGUUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 67.47113962932798
+    },
+    "PENGUUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 65.9057005342437
+    },
+    "PENGUUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 53.323560438422184
+    },
+    "RAYUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 64.94868854356216
+    },
+    "RAYUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 70.38235896550682
+    },
+    "RAYUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 77.33376562893656
+    },
+    "GRAMUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 45.60431881829921
+    },
+    "RAYUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 75.17709754269589
+    },
+    "GRAMUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 60.848037743262
+    },
+    "GRAMUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 68.77834981253889
+    },
+    "GRAMUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 64.20665723245475
+    },
+    "ZENUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 66.19978301464957
+    },
+    "ZENUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 75.50903950595372
+    },
+    "ZENUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 53.54078509393165
+    },
+    "ZENUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 42.64586479148465
+    },
+    "ASTERUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 59.04752140364375
+    },
+    "ASTERUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 74.60030262829133
+    },
+    "ASTERUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 63.90818678497439
+    },
+    "ASTERUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 54.0669056472397
+    },
+    "OPUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 53.11319410522785
+    },
+    "OPUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 75.00361631742838
+    },
+    "OPUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.05134229831089
+    },
+    "OPUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 57.98891102367098
+    },
+    "HBARUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 47.81905683839247
+    },
+    "HBARUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 58.39832095641817
+    },
+    "HBARUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 58.10446671200729
+    },
+    "HBARUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 49.99415558496978
+    },
+    "TONUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1782777600000,
+      "rsi": 44.50023623768925
+    },
+    "TONUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1782777600000,
+      "rsi": 54.338536554903484
+    },
+    "TONUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1782784800000,
+      "rsi": 50.05335222864369
+    },
+    "TONUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1782787500000,
+      "rsi": 46.53312306875924
+    },
+    "GOOGLBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 55.49379394466179
+    },
+    "GOOGLBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 66.24013749326066
+    },
+    "GOOGLBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 79.89378036427114
+    },
+    "GOOGLBUSDT|15M": {
+      "zone": "high",
+      "candle_time": 1789711200000,
+      "rsi": 91.5008871442086
+    },
+    "PENDLEUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 66.52284434385001
+    },
+    "PENDLEUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.23760458761248
+    },
+    "PENDLEUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 78.91219874291009
+    },
+    "PENDLEUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 72.34037928970262
+    },
+    "WBTCUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.22583317696446
+    },
+    "WBTCUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 57.72630509614254
+    },
+    "WBTCUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 70.88001261162195
+    },
+    "WBTCUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 66.9921919224854
+    },
+    "ETHFIUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 55.91373393143927
+    },
+    "ETHFIUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 61.166357530502545
+    },
+    "ETHFIUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 68.63503916743879
+    },
+    "ETHFIUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 54.60893077093937
+    },
+    "SHIBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 50.449856614494585
+    },
+    "SHIBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 65.68691528449358
+    },
+    "SHIBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 66.82046974656882
+    },
+    "SHIBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 57.55622167262902
+    },
+    "0GUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 59.611187556599624
+    },
+    "0GUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 66.73276659196706
+    },
+    "0GUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 58.93003378522007
+    },
+    "0GUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 48.85609763305587
+    },
+    "NVDABUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 49.85401052706845
+    },
+    "NVDABUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.97290157687682
+    },
+    "NVDABUSDT|1H": {
+      "zone": "high",
+      "candle_time": 1789707600000,
+      "rsi": 80.08700309478472
+    },
+    "NVDABUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 73.41754833947084
+    },
+    "KSMUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 65.85105047923543
+    },
+    "KSMUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 57.41814109079891
+    },
+    "KSMUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 64.64452877976728
+    },
+    "KSMUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 50.71369042848549
+    },
+    "MORPHOUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 46.34254636906447
+    },
+    "MORPHOUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 70.34738741621567
+    },
+    "MORPHOUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.40581209582409
+    },
+    "MORPHOUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 56.70012615942959
+    },
+    "ZROUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 52.53585661414018
+    },
+    "ZROUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 68.35327437418175
+    },
+    "ZROUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 66.2302172322392
+    },
+    "ZROUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 59.25390811172956
+    },
+    "RENDERUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 52.020697145724306
+    },
+    "RENDERUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 75.17148452547193
+    },
+    "RENDERUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 70.36034279616122
+    },
+    "RENDERUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 57.7848222590363
+    },
+    "GALAUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 54.955800651045244
+    },
+    "GALAUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 74.89586303633584
+    },
+    "GALAUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 65.97068675966253
+    },
+    "GALAUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 49.29551595141999
+    },
+    "EURIUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 34.324278955439496
+    },
+    "EURIUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 34.97411439160675
+    },
+    "EURIUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 51.33013447070438
+    },
+    "EURIUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 48.935635467465616
+    },
+    "CHIPUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 43.53940150663228
+    },
+    "CHIPUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 59.718138264657235
+    },
+    "CHIPUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 72.73163327842778
+    },
+    "CHIPUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 68.88858948453412
+    },
+    "AEROUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 59.99214863001043
+    },
+    "AEROUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 69.87674169679738
+    },
+    "AEROUSDT|1H": {
+      "zone": "high",
+      "candle_time": 1789707600000,
+      "rsi": 80.10686636403466
+    },
+    "AEROUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 78.8984244723176
+    },
+    "XUSDUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 54.335749150193124
+    },
+    "XUSDUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 54.72240895808706
+    },
+    "XUSDUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 50.753775301210574
+    },
+    "XUSDUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 41.80764515339479
+    },
+    "ICPUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 52.451960794733246
+    },
+    "ICPUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 65.31925702580517
+    },
+    "ICPUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 70.44160580059088
+    },
+    "ICPUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 62.38759086820574
+    },
+    "WLFIUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 55.65665397346529
+    },
+    "WLFIUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 59.93700439791681
+    },
+    "WLFIUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 52.53332102049745
+    },
+    "WLFIUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 48.19002460131227
+    },
+    "CRVUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 49.98664367979561
+    },
+    "CRVUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 58.452253103432035
+    },
+    "CRVUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 60.02238546931037
+    },
+    "CRVUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 55.151987218661525
+    },
+    "ZAMAUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.25385786466482
+    },
+    "ZAMAUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 62.90704583077425
+    },
+    "ZAMAUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 59.49923305292134
+    },
+    "ZAMAUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 53.76807763833768
+    },
+    "KORUBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 47.509626295590756
+    },
+    "KORUBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 50.30819837323875
+    },
+    "KORUBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 51.69593563519053
+    },
+    "KORUBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 49.86028748396088
+    },
+    "HEIUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 51.91440299648972
+    },
+    "HEIUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 61.09825724024155
+    },
+    "HEIUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 54.21379628605154
+    },
+    "HEIUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 46.99223050492847
+    },
+    "SOXLBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 48.030323494991606
+    },
+    "SOXLBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 61.01106184800129
+    },
+    "SOXLBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 69.4740447230752
+    },
+    "SOXLBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 79.89950695217033
+    },
+    "VIRTUALUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 44.30626128694716
+    },
+    "VIRTUALUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 66.11071438475624
+    },
+    "VIRTUALUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 71.86280005560147
+    },
+    "VIRTUALUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 61.959586127196204
+    },
+    "QQQBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 52.351487440706734
+    },
+    "QQQBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 63.89873211438501
+    },
+    "QQQBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 73.53330892166927
+    },
+    "QQQBUSDT|15M": {
+      "zone": "high",
+      "candle_time": 1789711200000,
+      "rsi": 88.19492309822702
+    },
+    "EDENUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 47.51994261368787
+    },
+    "EDENUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 51.52320126480694
+    },
+    "EDENUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 63.632025825711786
+    },
+    "EDENUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 56.68414024466787
+    },
+    "SEIUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 46.13859019671248
+    },
+    "SEIUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 69.30235853002253
+    },
+    "SEIUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 75.64992151940783
+    },
+    "MUBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 53.86349310944802
+    },
+    "SEIUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 77.40804640031722
+    },
+    "MUBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 71.41177367457908
+    },
+    "MUBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 73.625187877569
+    },
+    "MUBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 71.00761932284286
+    },
+    "NFPUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1783641600000,
+      "rsi": 41.05377933546238
+    },
+    "NFPUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1783641600000,
+      "rsi": 23.271004689232456
+    },
+    "NFPUSDT|1H": {
+      "zone": "low",
+      "candle_time": 1783648800000,
+      "rsi": 14.16414148167641
+    },
+    "NFPUSDT|15M": {
+      "zone": "low",
+      "candle_time": 1783651500000,
+      "rsi": 15.684266651247583
+    },
+    "BABYUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 45.63436296003705
+    },
+    "BABYUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 55.613870691893155
+    },
+    "BABYUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 55.51109789249861
+    },
+    "BABYUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 45.60520272426404
+    },
+    "FFUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 56.19373854346035
+    },
+    "FFUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 42.457940401960016
+    },
+    "FFUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 39.53305920307389
+    },
+    "FFUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 30.40055713085978
+    },
+    "BFUSDUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 52.03535682878699
+    },
+    "BFUSDUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 59.361092387860936
+    },
+    "BFUSDUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 41.138491821649225
+    },
+    "BFUSDUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 51.59185616097119
+    },
+    "AUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 55.39676844033873
+    },
+    "AUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 64.4343685312715
+    },
+    "AUSDT|1H": {
+      "zone": "high",
+      "candle_time": 1789707600000,
+      "rsi": 86.72502331645606
+    },
+    "AUSDT|15M": {
+      "zone": "high",
+      "candle_time": 1789711200000,
+      "rsi": 83.5063813887115
+    },
+    "TIAUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 48.83321750849015
+    },
+    "TIAUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 70.88913562391089
+    },
+    "TIAUSDT|1H": {
+      "zone": "high",
+      "candle_time": 1789707600000,
+      "rsi": 82.0000557589416
+    },
+    "TIAUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 79.89252318040825
+    },
+    "TUTUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 42.204436467380056
+    },
+    "TUTUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 63.1248828655043
+    },
+    "TUTUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 56.59686605931607
+    },
+    "SPYBUSDT|1D": {
+      "zone": "neutral",
+      "candle_time": 1789603200000,
+      "rsi": 47.71961994547655
+    },
+    "TUTUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 51.8834882174074
+    },
+    "SPYBUSDT|4H": {
+      "zone": "neutral",
+      "candle_time": 1789689600000,
+      "rsi": 54.14016714634918
+    },
+    "SPYBUSDT|1H": {
+      "zone": "neutral",
+      "candle_time": 1789707600000,
+      "rsi": 62.34957718650267
+    },
+    "SPYBUSDT|15M": {
+      "zone": "neutral",
+      "candle_time": 1789711200000,
+      "rsi": 72.30968220723423
+    }
+  },
+  "last_run_utc": "2026-09-18T06:23:36.779295+00:00",
+  "last_scan_symbols": 100
 }
