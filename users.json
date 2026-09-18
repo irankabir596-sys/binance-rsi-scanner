@@ -1,10 +1,6 @@
 {
   "1413646760": {
-    "active": true,
-    "authorized": true,
-    "first_name": "Hossein",
-    "last_seen": "2026-09-17T19:20:26.837736+00:00",
-    "username": "Hossein_Nazarpour8"
+    "enabled": true
   },
   "5952888026": {
     "active": true,
