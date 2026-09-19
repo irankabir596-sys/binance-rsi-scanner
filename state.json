@@ -609,7 +609,7 @@
     "XRPUSDT|15M": "1789741800000",
     "XRPUSDT|1H": "1789740000000",
     "XTZUSDT|15M": "1789828200000",
-    "XTZUSDT|1H": "1789794000000",
+    "XTZUSDT|1H": "1789826400000",
     "XTZUSDT|4H": "1789776000000",
     "ZAMAUSDT|15M": "1789805700000",
     "ZAMAUSDT|1H": "1789804800000",
@@ -659,6 +659,7 @@
     "WBTCUSDT|1H": "high",
     "XRPUSDT|1H": "high",
     "XTZUSDT|15M": "high",
+    "XTZUSDT|1H": "high",
     "ZAMAUSDT|4H": "high"
   },
   "live_outcomes": [],
