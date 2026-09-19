@@ -621,6 +621,7 @@
     "ZAMAUSDT|15M": "1789805700000",
     "ZAMAUSDT|1H": "1789804800000",
     "ZAMAUSDT|4H": "1789747200000",
+    "ZECUSDT|15M": "1789838100000",
     "ZENUSDT|15M": "1789757100000",
     "ZENUSDT|1H": "1789758000000",
     "ZKUSDT|1H": "1789761600000"
@@ -669,7 +670,8 @@
     "XRPUSDT|1H": "high",
     "XTZUSDT|15M": "high",
     "XTZUSDT|1H": "high",
-    "ZAMAUSDT|4H": "high"
+    "ZAMAUSDT|4H": "high",
+    "ZECUSDT|15M": "low"
   },
   "live_outcomes": [],
   "rsi": {
