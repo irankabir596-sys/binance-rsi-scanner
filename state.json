@@ -505,7 +505,7 @@
   "ZROUSDT_5m": 37.66170187109184,
   "last_alert_candle": {
     "AAVEUSDT|15M": "1790259300000",
-    "ACEUSDT|15M": "1789982100000",
+    "ACEUSDT|15M": "1790397000000",
     "ACEUSDT|1H": "1790168400000",
     "ADAUSDT|15M": "1790259300000",
     "ADAUSDT|1H": "1789783200000",
@@ -805,6 +805,7 @@
   "last_scan_symbols": 100,
   "last_zone": {
     "AAVEUSDT|15M": "high",
+    "ACEUSDT|15M": "high",
     "ADAUSDT|15M": "high",
     "APTUSDT|15M": "high",
     "APTUSDT|1H": "high",
