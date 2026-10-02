@@ -507,7 +507,7 @@
     "0GUSDT|15M": "1790640900000",
     "0GUSDT|1D": "1790553600000",
     "0GUSDT|4H": "1790683200000",
-    "2ZUSDT|15M": "1790414100000",
+    "2ZUSDT|15M": "1790975700000",
     "2ZUSDT|1H": "1790956800000",
     "2ZUSDT|4H": "1790395200000",
     "AAVEUSDT|15M": "1790916300000",
@@ -901,6 +901,7 @@
   "last_scan_symbols": 100,
   "last_zone": {
     "0GUSDT|1D": "high",
+    "2ZUSDT|15M": "low",
     "AAVEUSDT|15M": "high",
     "ACEUSDT|15M": "high",
     "ADAUSDT|15M": "high",
